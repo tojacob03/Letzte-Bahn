@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Methodik – Letzte Bahn</title>
+  <meta name="description" content="Wie der ÖPNV-Erreichbarkeitsatlas rechnet: Raster, Ziele, Fahrplan, Zeitfenster, Median und bekannte Fehlerquellen.">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,400;0,500;0,600;1,400&family=Barlow+Semi+Condensed:wght@500;600;700&display=swap">
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body class="page-article">
+  <a class="skip-link" href="#main">Zum Inhalt springen</a>
+  <header class="site-header">
+    <a class="brand" href="./">
+      <svg class="brand-mark" viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="18.5" fill="#f2c200" stroke="#0b7a48" stroke-width="3"/><path d="M12 10h4.5v8h7v-8H28v20h-4.5v-8h-7v8H12z" fill="#0b7a48"/></svg>
+      <span class="brand-name">Letzte Bahn</span>
+    </a>
+    <p class="brand-claim">Wie gut ist dein Ort mit Bus und Bahn angebunden?</p>
+    <nav class="site-nav" aria-label="Hauptnavigation">
+      <a href="./">Karte</a>
+      <a href="analyse.html">Analyse</a>
+      <a href="methodik.html" aria-current="page">Methodik</a>
+    </nav>
+  </header>
+
+  <main class="article" id="main">
+    <header class="article-head">
+      <h1>Methodik in Kürze</h1>
+      <p class="lead">Wie lange dauert es von jedem bewohnten Ort mit Bus und Bahn zum nächsten Hausarzt, zur Apotheke, zum Supermarkt, zur Grundschule, zur weiterführenden Schule, zum Krankenhaus und zum nächsten Bahnhof? Und wie viele Menschen erreicht man in 30, 45 und 60 Minuten? Die ausführliche Fassung auf Englisch steht in <a href="https://github.com/tojacob03/Letzte-Bahn/blob/main/METHODOLOGY.md">METHODOLOGY.md</a>.</p>
+      <p class="stand" data-stand></p>
+    </header>
+
+    <section class="finding">
+      <h2>Wo die Reise beginnt</h2>
+      <p>Grundlage ist das Bevölkerungsraster des Zensus 2022 mit Zellen von 100 × 100 Metern. Es wird zu Quadraten von 500 Metern zusammengefasst. Startpunkt jedes Quadrats ist nicht die geometrische Mitte, sondern der bevölkerungsgewichtete Schwerpunkt der bewohnten 100-m-Zellen, also dort, wo die Menschen tatsächlich wohnen. Quadrate an Gemeindegrenzen zählen anteilig zu beiden Gemeinden.</p>
+    </section>
+
+    <section class="finding">
+      <h2>Die Ziele</h2>
+      <p>Arztpraxen, Apotheken, Supermärkte, Schulen und Krankenhäuser stammen aus OpenStreetMap. Als Hausarzt zählt jede Arztpraxis, die nicht als Facharztpraxis gekennzeichnet ist, dazu Praxen für Innere Medizin. Das überschätzt das Angebot eher; die gezeigten Lücken sind also vorsichtig gerechnet. Zur Kontrolle rechnet die Pipeline zusätzlich mit einer strengen Definition, die nur eindeutig gekennzeichnete Hausarztpraxen zählt.</p>
+      <p>Schulen werden über Name und Schulstufe eingeordnet; Berufs- und Förderschulen zählen nicht. Reha- und psychiatrische Kliniken zählen nicht als Krankenhaus. Bahnhöfe kommen aus dem Fahrplan: Es zählen Halte von Regional-, S-Bahn- und Fernverkehrszügen, und zwar nur in Zeitfenstern, in denen dort auch ein Zug abfährt. Ziele bis 20 Kilometer jenseits der Regionsgrenze zählen mit, soweit sie in Deutschland liegen.</p>
+    </section>
+
+    <section class="finding">
+      <h2>Fahrplan und Zeitfenster</h2>
+      <p>Der Fahrplan kommt als GTFS-Datensatz von gtfs.de (Daten der DELFI e.V.) und deckt jeweils rund 30 Tage ab. Die Pipeline wählt daraus automatisch einen gewöhnlichen Dienstag außerhalb von Schulferien und Feiertagen und einen gewöhnlichen Sonntag. Tage mit auffällig wenigen Fahrten werden übersprungen. Gerechnet wird für drei Zeitfenster: werktags 7 bis 9 Uhr, werktags 20 bis 22 Uhr und sonntags 10 bis 12 Uhr.</p>
+    </section>
+
+    <section class="finding">
+      <h2>Der Median statt eines Glückstreffers</h2>
+      <p>Für jede einzelne Abfahrtsminute im Zeitfenster wird die schnellste Verbindung berechnet, die Wartezeit am Start eingeschlossen. Angezeigt wird der Median über alle diese Minuten: In der Hälfte der Fälle ist man schneller, in der anderen Hälfte langsamer. Ein einzelner günstiger Anschluss verzerrt das Ergebnis so nicht. Ist ein Ziel in mehr als der Hälfte der Minuten nicht innerhalb von zwei Stunden erreichbar, gilt es als nicht erreichbar.</p>
+    </section>
+
+    <section class="finding">
+      <h2>Zu Fuß und mit dem Auto</h2>
+      <p>Fußwege zur Haltestelle, beim Umsteigen und vom letzten Halt zum Ziel werden mit 4,5 km/h auf dem Wegenetz von OpenStreetMap gerechnet, jeweils höchstens 30 Minuten. Liegt ein Ziel zu Fuß näher, zählt der Fußweg. Das Routing übernimmt der Open-Source-Router R5 über das Python-Paket r5py. Die Autozeiten nutzen dieselben Start- und Zielpunkte mit den Geschwindigkeiten aus OpenStreetMap, ohne Stau und ohne Parkplatzsuche.</p>
+    </section>
+
+    <section class="finding">
+      <h2>Von Quadraten zu Gemeinden</h2>
+      <p>Für jede Gemeinde steht der Median der Einwohner: die Reisezeit, die die Hälfte der Einwohner höchstens braucht. Dazu kommen Anteile, etwa wie viele Einwohner das Ziel in 30 oder 60 Minuten erreichen. Bei den erreichbaren Menschen ist es der Durchschnitt über alle Einwohner.</p>
+    </section>
+
+    <section class="finding">
+      <h2>Was die Zahlen nicht wissen</h2>
+      <ul>
+        <li>Der Sollfahrplan kann Lücken haben; Baustellen am Stichtag verändern das Ergebnis.</li>
+        <li>Rufbusse und On-Demand-Angebote fehlen im Fahrplan oder stehen dort wie gewöhnliche Fahrten, obwohl man sie vorher bestellen muss.</li>
+        <li>Echtzeit, Verspätungen und Ausfälle sind nicht enthalten.</li>
+        <li>Öffnungszeiten werden nicht berücksichtigt: Gemessen wird die Verbindung, nicht ob die Praxis geöffnet hat.</li>
+        <li>OpenStreetMap ist nicht überall vollständig, vor allem bei Arztpraxen.</li>
+        <li>Barrierefreiheit, Tarife und Fahrradmitnahme fließen nicht ein.</li>
+        <li>Jenseits der Grenzen zu Frankreich und Luxemburg fehlen Einwohner und Ziele.</li>
+      </ul>
+    </section>
+
+    <section class="finding">
+      <h2>Nachvollziehbar und wiederholbar</h2>
+      <p>Die gesamte Pipeline läuft automatisch und kostenlos in GitHub Actions: Daten laden, zuschneiden, routen, mit dbt modellieren und testen, exportieren. Jeder Fahrplanstand wird mit seinen Kennzahlen im Repository abgelegt; sobald zwei Stände vorliegen, zeigt die Karte die Veränderung. Das Datenmodell mit allen Tests ist als <a href="dbt/index.html">dbt-Dokumentation</a> einsehbar.</p>
+    </section>
+
+    <section class="finding">
+      <h2>Kennzahlen dieses Laufs</h2>
+      <dl id="run-facts" class="facts"><dd>Wird geladen …</dd></dl>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <h2 class="footer-title">Datenquellen</h2>
+      <ul class="sources">
+        <li>Fahrplandaten: <a href="https://www.delfi.de">DELFI e.V.</a>, bereitgestellt über <a href="https://gtfs.de">gtfs.de</a>, Lizenz <a href="https://creativecommons.org/licenses/by/4.0/deed.de">CC BY 4.0</a>; auf die Region zugeschnitten.</li>
+        <li>Straßen, Wege und Ziele: © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap-Mitwirkende</a>, Lizenz ODbL.</li>
+        <li>Bevölkerung: Zensus 2022, © Statistische Ämter des Bundes und der Länder, <a href="https://www.govdata.de/dl-de/by-2-0">dl-de/by-2-0</a>; auf ein 500-m-Raster zusammengefasst.</li>
+        <li>Gemeindegrenzen: © <a href="https://www.bkg.bund.de">BKG</a> (2026), <a href="https://www.govdata.de/dl-de/by-2-0">dl-de/by-2-0</a>; Daten verändert (vereinfacht).</li>
+      </ul>
+      <p class="licence">Die Ergebnisdaten stehen unter der <a href="https://opendatacommons.org/licenses/odbl/1-0/">Open Database License (ODbL)</a>, der Code unter der MIT-Lizenz. Quellcode, Methodik und alle Daten: <a href="https://github.com/tojacob03/Letzte-Bahn">github.com/tojacob03/Letzte-Bahn</a>.</p>
+    </div>
+  </footer>
+
+  <script src="assets/common.js"></script>
+  <script src="assets/methodik.js"></script>
+</body>
+</html>

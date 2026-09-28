@@ -1,0 +1,38 @@
+# Small and fast configuration for CI smoke runs of the complete pipeline:
+# Landkreis St. Wendel, 1 km grid and 30-minute departure windows.
+extends: saarland.yaml
+
+region:
+  id: smoke
+  name: Landkreis St. Wendel (Testlauf)
+  ags_prefix: "10046"
+  buffer_km: 5
+  network_margin_km: 3
+
+grid:
+  cell_size_m: 1000
+
+sources:
+  osm:
+    - url: https://download.geofabrik.de/europe/germany/saarland-latest.osm.pbf
+      filename: saarland-latest.osm.pbf
+
+windows:
+  - id: wd_am
+    label: Werktag 7–7:30 Uhr
+    day: weekday
+    start: "07:00"
+    minutes: 30
+  - id: wd_pm
+    label: Werktag 20–20:30 Uhr
+    day: weekday
+    start: "20:00"
+    minutes: 30
+  - id: su_am
+    label: Sonntag 10–10:30 Uhr
+    day: sunday
+    start: "10:00"
+    minutes: 30
+
+routing:
+  origin_chunk_size: 100

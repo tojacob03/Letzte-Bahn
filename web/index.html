@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Letzte Bahn – ÖPNV-Erreichbarkeitsatlas</title>
+  <meta name="description" content="Wie gut ist dein Ort mit Bus und Bahn angebunden? Reisezeiten zu Hausarzt, Apotheke, Supermarkt, Schule, Krankenhaus und Bahnhof, werktags, abends und sonntags.">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,400;0,500;0,600;1,400&family=Barlow+Semi+Condensed:wght@500;600;700&display=swap">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/maplibre-gl@5/dist/maplibre-gl.css">
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body class="page-map">
+  <a class="skip-link" href="#panel">Zur Auswahl springen</a>
+  <header class="site-header">
+    <a class="brand" href="./">
+      <svg class="brand-mark" viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="18.5" fill="#f2c200" stroke="#0b7a48" stroke-width="3"/><path d="M12 10h4.5v8h7v-8H28v20h-4.5v-8h-7v8H12z" fill="#0b7a48"/></svg>
+      <span class="brand-name">Letzte Bahn</span>
+    </a>
+    <p class="brand-claim">Wie gut ist dein Ort mit Bus und Bahn angebunden?</p>
+    <nav class="site-nav" aria-label="Hauptnavigation">
+      <a href="./" aria-current="page">Karte</a>
+      <a href="analyse.html">Analyse</a>
+      <a href="methodik.html">Methodik</a>
+    </nav>
+  </header>
+
+  <main class="map-layout">
+    <section class="map-wrap" aria-label="Karte">
+      <div id="map"></div>
+      <div class="map-tooltip" id="map-tooltip" hidden></div>
+      <p class="map-note" id="map-note" hidden></p>
+      <div class="legend" id="legend"></div>
+    </section>
+
+    <aside class="panel" id="panel" aria-label="Auswahl und Ergebnisse">
+      <form class="search" id="search-form" role="search">
+        <label class="control-label" for="place-search">Ort suchen</label>
+        <div class="search-row">
+          <input id="place-search" list="place-list" autocomplete="off" placeholder="z. B. Lebach">
+          <button type="submit">Zeigen</button>
+        </div>
+        <datalist id="place-list"></datalist>
+        <p class="search-status" id="search-status" aria-live="polite"></p>
+      </form>
+
+      <div class="controls">
+        <label class="control-label" for="metric">Was willst du erreichen?</label>
+        <select id="metric"></select>
+        <fieldset>
+          <legend class="control-label">Wann bist du unterwegs?</legend>
+          <div class="segments" id="window-options"></div>
+        </fieldset>
+        <fieldset>
+          <legend class="control-label">Darstellung</legend>
+          <div class="segments" id="level-options"></div>
+        </fieldset>
+      </div>
+
+      <section class="place" id="place" tabindex="-1" aria-live="polite">
+        <p>Karte und Daten werden geladen …</p>
+      </section>
+    </aside>
+  </main>
+
+  <section class="table-section">
+    <details>
+      <summary>Alle Gemeinden als Tabelle</summary>
+      <div id="muni-table"></div>
+    </details>
+  </section>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <p class="stand" data-stand></p>
+      <h2 class="footer-title">Datenquellen</h2>
+      <ul class="sources">
+        <li>Fahrplandaten: <a href="https://www.delfi.de">DELFI e.V.</a>, bereitgestellt über <a href="https://gtfs.de">gtfs.de</a>, Lizenz <a href="https://creativecommons.org/licenses/by/4.0/deed.de">CC BY 4.0</a>; auf die Region zugeschnitten.</li>
+        <li>Straßen, Wege und Ziele: © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap-Mitwirkende</a>, Lizenz ODbL.</li>
+        <li>Bevölkerung: Zensus 2022, © Statistische Ämter des Bundes und der Länder, <a href="https://www.govdata.de/dl-de/by-2-0">dl-de/by-2-0</a>; auf ein 500-m-Raster zusammengefasst.</li>
+        <li>Gemeindegrenzen: © <a href="https://www.bkg.bund.de">BKG</a> (2026), <a href="https://www.govdata.de/dl-de/by-2-0">dl-de/by-2-0</a>; Daten verändert (vereinfacht).</li>
+        <li>Hintergrundkarte: <a href="https://openfreemap.org">OpenFreeMap</a>, © <a href="https://openmaptiles.org">OpenMapTiles</a>, Daten von OpenStreetMap.</li>
+      </ul>
+      <p class="licence">Die Ergebnisdaten stehen unter der <a href="https://opendatacommons.org/licenses/odbl/1-0/">Open Database License (ODbL)</a>, der Code unter der MIT-Lizenz. Quellcode, Methodik und alle Daten: <a href="https://github.com/tojacob03/Letzte-Bahn">github.com/tojacob03/Letzte-Bahn</a>.</p>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/maplibre-gl@5/dist/maplibre-gl.js"></script>
+  <script src="assets/common.js"></script>
+  <script src="assets/map.js"></script>
+</body>
+</html>

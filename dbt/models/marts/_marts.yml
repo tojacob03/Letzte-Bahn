@@ -1,0 +1,130 @@
+version: 2
+
+models:
+  - name: dim_windows
+    description: Analysis time windows with the service dates used.
+    columns:
+      - name: window_id
+        data_tests: [unique, not_null]
+
+  - name: dim_cells
+    description: Grid cells with main municipality and population inside the region.
+    columns:
+      - name: cell_id
+        data_tests: [unique, not_null]
+      - name: region_population
+        data_tests:
+          - value_between:
+              min_value: 0
+
+  - name: dim_municipalities
+    description: Municipalities with population (Zensus 2022 grid) and area.
+    columns:
+      - name: ags
+        data_tests: [unique, not_null]
+
+  - name: dim_municipality_neighbors
+    description: Pairs of municipalities that share a border (both directions).
+    data_tests:
+      - unique_combination:
+          columns: [ags, neighbor_ags]
+    columns:
+      - name: neighbor_ags
+        data_tests:
+          - relationships:
+              to: ref('dim_municipalities')
+              field: ags
+
+  - name: fct_cell_accessibility
+    description: >
+      Minutes to the nearest destination of every category from each origin cell, by
+      public transport (per time window) and by car, and their ratio.
+    data_tests:
+      - unique_combination:
+          columns: [cell_id, window_id, category]
+    columns:
+      - name: cell_id
+        data_tests:
+          - relationships:
+              to: ref('dim_cells')
+              field: cell_id
+      - name: category
+        data_tests:
+          - relationships:
+              to: ref('categories')
+              field: category_id
+      - name: pt_minutes
+        description: NULL = not reachable within the maximum trip time.
+      - name: pt_car_ratio
+        data_tests:
+          - value_between:
+              min_value: 0
+
+  - name: fct_cell_reachability
+    description: Residents reachable within each threshold, by public transport and by car.
+    data_tests:
+      - unique_combination:
+          columns: [cell_id, window_id, threshold_min]
+
+  - name: fct_municipality_accessibility
+    description: >
+      Population-weighted accessibility per municipality: shares of residents reaching the
+      nearest destination within 15/30/60 minutes and weighted medians (NULL = the median
+      resident cannot reach a destination within the maximum trip time).
+    data_tests:
+      - unique_combination:
+          columns: [ags, window_id, category]
+    columns:
+      - name: share_within_30
+        data_tests:
+          - value_between:
+              min_value: 0
+              max_value: 1
+      - name: share_within_60
+        data_tests:
+          - value_between:
+              min_value: 0
+              max_value: 1
+      - name: share_unreachable
+        data_tests:
+          - value_between:
+              min_value: 0
+              max_value: 1
+
+  - name: fct_region_accessibility
+    description: The same measures as fct_municipality_accessibility for the whole region.
+    data_tests:
+      - unique_combination:
+          columns: [window_id, category]
+
+  - name: fct_municipality_reachability
+    description: Population-weighted mean of the reachable population per municipality.
+    data_tests:
+      - unique_combination:
+          columns: [ags, window_id, threshold_min]
+
+  - name: fct_region_reachability
+    description: Mean and median reachable population for the whole region.
+    data_tests:
+      - unique_combination:
+          columns: [window_id, threshold_min]
+
+  - name: mart_municipality_metrics_long
+    description: All municipality metrics in long format; published with every snapshot.
+    data_tests:
+      - unique_combination:
+          columns: [ags, window_id, dimension, metric]
+
+  - name: fct_municipality_change
+    description: Change of each municipality metric against the previous snapshot.
+
+  - name: fct_findings
+    description: Headline numbers for the analysis page, README and case study.
+    data_tests:
+      - unique_combination:
+          columns: [finding_id, metric_key]
+    columns:
+      - name: finding_id
+        data_tests: [not_null]
+      - name: metric_key
+        data_tests: [not_null]

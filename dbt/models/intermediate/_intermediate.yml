@@ -1,0 +1,34 @@
+version: 2
+
+models:
+  - name: int_nearest_destination_pt
+    description: >
+      Minutes by public transport from each origin cell to the nearest destination of each
+      category and time window (median over the departure window). NULL means that no
+      destination of that category is reachable within the maximum trip time.
+    data_tests:
+      - unique_combination:
+          columns: [cell_id, window_id, category]
+    columns:
+      - name: minutes
+        data_tests:
+          - value_between:
+              min_value: 0
+
+  - name: int_nearest_destination_car
+    description: Minutes by car (free flow) from each origin cell to the nearest destination.
+    data_tests:
+      - unique_combination:
+          columns: [cell_id, category]
+
+  - name: int_reachable_population
+    description: Residents reachable within each threshold, by public transport and by car.
+    data_tests:
+      - unique_combination:
+          columns: [cell_id, window_id, threshold_min]
+    columns:
+      - name: reachable_population_pt
+        data_tests:
+          - not_null
+          - value_between:
+              min_value: 0

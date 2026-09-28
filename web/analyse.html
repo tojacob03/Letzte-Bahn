@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Analyse – Letzte Bahn</title>
+  <meta name="description" content="Fünf Befunde zur Anbindung mit Bus und Bahn: abends, sonntags und im Vergleich zum Auto.">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,400;0,500;0,600;1,400&family=Barlow+Semi+Condensed:wght@500;600;700&display=swap">
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body class="page-article">
+  <a class="skip-link" href="#main">Zum Inhalt springen</a>
+  <header class="site-header">
+    <a class="brand" href="./">
+      <svg class="brand-mark" viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="18.5" fill="#f2c200" stroke="#0b7a48" stroke-width="3"/><path d="M12 10h4.5v8h7v-8H28v20h-4.5v-8h-7v8H12z" fill="#0b7a48"/></svg>
+      <span class="brand-name">Letzte Bahn</span>
+    </a>
+    <p class="brand-claim">Wie gut ist dein Ort mit Bus und Bahn angebunden?</p>
+    <nav class="site-nav" aria-label="Hauptnavigation">
+      <a href="./">Karte</a>
+      <a href="analyse.html" aria-current="page">Analyse</a>
+      <a href="methodik.html">Methodik</a>
+    </nav>
+  </header>
+
+  <main class="article" id="main">
+    <header class="article-head">
+      <h1>Was die Daten zeigen</h1>
+      <p class="lead">Fünf Befunde zur Anbindung mit Bus und Bahn im <span id="region-name">Pilotgebiet</span>. Jede Zahl wird bei jedem Lauf der Pipeline neu berechnet; keine ist von Hand eingetragen.</p>
+      <p class="stand" data-stand></p>
+    </header>
+
+    <div id="findings" aria-live="polite">
+      <p>Die Befunde werden geladen …</p>
+    </div>
+
+    <section class="finding method-note">
+      <h2>So wurde gerechnet</h2>
+      <p>Startpunkte sind alle bewohnten 500-m-Quadrate des Zensus 2022, Ziele die nächste Arztpraxis, Apotheke, Schule und so weiter aus OpenStreetMap. Für jede Abfahrtsminute im Zeitfenster wird die schnellste Verbindung mit Bus, Bahn und zu Fuß gerechnet; gezeigt wird der Median. Werte für Gemeinden und das ganze Gebiet sind nach Einwohnern gewichtet. Die Einzelheiten und bekannten Schwächen stehen in der <a href="methodik.html">Methodik</a>.</p>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <h2 class="footer-title">Datenquellen</h2>
+      <ul class="sources">
+        <li>Fahrplandaten: <a href="https://www.delfi.de">DELFI e.V.</a>, bereitgestellt über <a href="https://gtfs.de">gtfs.de</a>, Lizenz <a href="https://creativecommons.org/licenses/by/4.0/deed.de">CC BY 4.0</a>; auf die Region zugeschnitten.</li>
+        <li>Straßen, Wege und Ziele: © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap-Mitwirkende</a>, Lizenz ODbL.</li>
+        <li>Bevölkerung: Zensus 2022, © Statistische Ämter des Bundes und der Länder, <a href="https://www.govdata.de/dl-de/by-2-0">dl-de/by-2-0</a>; auf ein 500-m-Raster zusammengefasst.</li>
+        <li>Gemeindegrenzen: © <a href="https://www.bkg.bund.de">BKG</a> (2026), <a href="https://www.govdata.de/dl-de/by-2-0">dl-de/by-2-0</a>; Daten verändert (vereinfacht).</li>
+      </ul>
+      <p class="licence">Die Ergebnisdaten stehen unter der <a href="https://opendatacommons.org/licenses/odbl/1-0/">Open Database License (ODbL)</a>, der Code unter der MIT-Lizenz. Quellcode, Methodik und alle Daten: <a href="https://github.com/tojacob03/Letzte-Bahn">github.com/tojacob03/Letzte-Bahn</a>.</p>
+    </div>
+  </footer>
+
+  <script src="assets/common.js"></script>
+  <script src="assets/analysis.js"></script>
+</body>
+</html>

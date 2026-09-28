@@ -1,0 +1,9 @@
+category_id,label_de,label_en,sort_order,is_sensitivity,source
+gp,Hausarzt,Family doctor,1,false,OpenStreetMap
+pharmacy,Apotheke,Pharmacy,2,false,OpenStreetMap
+supermarket,Supermarkt,Supermarket,3,false,OpenStreetMap
+primary_school,Grundschule,Primary school,4,false,OpenStreetMap
+secondary_school,Weiterführende Schule,Secondary school,5,false,OpenStreetMap
+hospital,Krankenhaus,Hospital,6,false,OpenStreetMap
+rail_station,Bahnhof (Regional-/Fernverkehr),Rail station (regional/long-distance),7,false,GTFS
+gp_strict,Hausarzt (strenge Definition),Family doctor (strict definition),8,true,OpenStreetMap

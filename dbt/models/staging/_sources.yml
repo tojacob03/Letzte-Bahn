@@ -1,0 +1,46 @@
+version: 2
+
+sources:
+  - name: pipeline
+    description: >
+      Parquet files written by the Python stages; `src/transit_atlas/staging.py` defines
+      their schemas. Paths are relative to the repository root, the working directory of
+      every dbt run.
+    meta:
+      external_location: "data/staging/{name}.parquet"
+    tables:
+      - name: cells
+        description: Grid cells of the study area (region plus buffer) with population.
+        columns:
+          - name: cell_id
+            data_tests: [unique, not_null]
+          - name: cell_idx
+            data_tests: [unique, not_null]
+      - name: cell_municipality
+        description: Population of each cell per municipality (100 m cells assigned by location).
+      - name: municipalities
+        description: Municipalities of the region (BKG VG250), geometry as WKB in EPSG:25832.
+        columns:
+          - name: ags
+            data_tests: [unique, not_null]
+      - name: pois
+        description: Destinations by category (OpenStreetMap; rail stations from GTFS).
+      - name: station_service
+        description: Train departures per rail station and time window.
+      - name: windows
+        description: Analysis time windows and the service date used for each of them.
+      - name: thresholds
+        description: Travel-time thresholds in minutes for the reachable population.
+      - name: destinations
+        description: Routing destinations; `dest_idx` indexes the travel-time matrices.
+        columns:
+          - name: dest_idx
+            data_tests: [unique, not_null]
+      - name: travel_times_pt
+        description: >
+          Public transport travel times in minutes (walking included), median over all
+          departure minutes of the window. Only pairs within the cut-off are stored.
+      - name: travel_times_car
+        description: Car travel times in minutes (free-flow speeds from OpenStreetMap).
+      - name: previous_municipality_metrics
+        description: Municipality metrics of the previous published snapshot (may be empty).

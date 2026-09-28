@@ -1,0 +1,11 @@
+version: 2
+
+seeds:
+  - name: categories
+    description: >
+      Destination categories with German and English labels. `gp_strict` is a sensitivity
+      variant of `gp` that only counts clearly tagged family doctors; it is not shown on the
+      map but used to check how much the doctor definition matters.
+    columns:
+      - name: category_id
+        data_tests: [unique, not_null]
