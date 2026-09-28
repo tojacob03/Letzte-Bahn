@@ -1,0 +1,39 @@
+{
+  "gp_evening_60": {
+    "municipalities_below_half": 0,
+    "municipalities_total": 8,
+    "population_share_without_su_am": 0.205,
+    "population_share_without_wd_am": 0.0,
+    "population_share_without_wd_pm": 0.142
+  },
+  "hospital_60": {
+    "population_share_without_su_am": 0.941,
+    "population_share_without_wd_am": 0.71,
+    "population_share_without_wd_pm": 0.883
+  },
+  "municipal_gap_45": {
+    "best": 28821,
+    "best_label": "St. Wendel",
+    "worst": 6432,
+    "worst_label": "Freisen"
+  },
+  "pt_car_ratio_supermarket": {
+    "median_ratio_su_am": 5,
+    "median_ratio_wd_am": 4.167,
+    "median_ratio_wd_pm": 5,
+    "share_over_3_su_am": 0.756,
+    "share_over_3_wd_am": 0.754,
+    "share_over_3_wd_pm": 0.756
+  },
+  "rail_station_30": {
+    "population_share_within_su_am": 0.292,
+    "population_share_within_wd_am": 0.3,
+    "population_share_within_wd_pm": 0.278
+  },
+  "reach_45": {
+    "car_median": 178317,
+    "median_su_am": 4151,
+    "median_wd_am": 12058,
+    "median_wd_pm": 3595
+  }
+}

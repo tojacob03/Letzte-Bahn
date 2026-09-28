@@ -1,0 +1,143 @@
+{
+  "snapshot_id": "smoke_2026-09-26",
+  "generated_at": "2026-09-28T20:18:27+00:00",
+  "region": {
+    "id": "smoke",
+    "name": "Landkreis St. Wendel (Testlauf)",
+    "ags_prefix": "10046"
+  },
+  "service_dates": {
+    "weekday": "2026-09-29",
+    "sunday": "2026-10-04"
+  },
+  "service_date_notes": [],
+  "feed": {
+    "source": "gtfs.de (DELFI e.V.)",
+    "last_modified": "Sat, 26 Sep 2026 08:42:04 GMT",
+    "valid_from": "2026-09-26",
+    "valid_to": "2026-10-26",
+    "median_trips_per_day": 4430,
+    "trips_on_weekday": 5701,
+    "trips_on_sunday": 1777
+  },
+  "windows": [
+    {
+      "id": "wd_am",
+      "label": "Werktag 7–7:30 Uhr",
+      "day_type": "weekday",
+      "date": "2026-09-29",
+      "start": "07:00",
+      "minutes": 30
+    },
+    {
+      "id": "wd_pm",
+      "label": "Werktag 20–20:30 Uhr",
+      "day_type": "weekday",
+      "date": "2026-09-29",
+      "start": "20:00",
+      "minutes": 30
+    },
+    {
+      "id": "su_am",
+      "label": "Sonntag 10–10:30 Uhr",
+      "day_type": "sunday",
+      "date": "2026-10-04",
+      "start": "10:00",
+      "minutes": 30
+    }
+  ],
+  "categories": [
+    {
+      "id": "gp",
+      "label": "Hausarzt",
+      "label_en": "Family doctor"
+    },
+    {
+      "id": "pharmacy",
+      "label": "Apotheke",
+      "label_en": "Pharmacy"
+    },
+    {
+      "id": "supermarket",
+      "label": "Supermarkt",
+      "label_en": "Supermarket"
+    },
+    {
+      "id": "primary_school",
+      "label": "Grundschule",
+      "label_en": "Primary school"
+    },
+    {
+      "id": "secondary_school",
+      "label": "Weiterführende Schule",
+      "label_en": "Secondary school"
+    },
+    {
+      "id": "hospital",
+      "label": "Krankenhaus",
+      "label_en": "Hospital"
+    },
+    {
+      "id": "rail_station",
+      "label": "Bahnhof (Regional-/Fernverkehr)",
+      "label_en": "Rail station (regional/long-distance)"
+    }
+  ],
+  "thresholds": [
+    30,
+    45,
+    60
+  ],
+  "grid_cell_size_m": 1000,
+  "routing": {
+    "walk_speed_kmh": 4.5,
+    "max_walk_minutes": 30,
+    "max_trip_minutes": 120,
+    "max_rides": 8,
+    "statistic": "median over all departure minutes of the window"
+  },
+  "counts": {
+    "municipalities": 8,
+    "cells": 724,
+    "origin_cells": 314,
+    "population_region": 87568,
+    "population_study_area": 200438,
+    "pois": {
+      "gp": 44,
+      "hospital": 1,
+      "pharmacy": 39,
+      "primary_school": 32,
+      "rail_station": 21,
+      "secondary_school": 14,
+      "supermarket": 59
+    },
+    "gp_strict": 8
+  },
+  "sources": [
+    {
+      "role": "gtfs",
+      "url": "https://download.gtfs.de/germany/free/latest.zip",
+      "last_modified": "Sat, 26 Sep 2026 08:42:04 GMT",
+      "retrieved_at": "2026-09-28T20:16:44+00:00"
+    },
+    {
+      "role": "osm",
+      "url": "https://download.geofabrik.de/europe/germany/saarland-latest.osm.pbf",
+      "last_modified": "Mon, 28 Sep 2026 00:44:14 GMT",
+      "retrieved_at": "2026-09-28T20:16:54+00:00"
+    },
+    {
+      "role": "census",
+      "url": "https://www.destatis.de/static/DE/zensus/gitterdaten/Zensus2022_Bevoelkerungszahl.zip",
+      "last_modified": "Tue, 08 Oct 2024 13:18:15 GMT",
+      "retrieved_at": "2026-09-28T20:16:56+00:00"
+    },
+    {
+      "role": "boundaries",
+      "url": "https://daten.gdz.bkg.bund.de/produkte/vg/vg250_ebenen_0101/aktuell/vg250_01-01.utm32s.gpkg.ebenen.zip",
+      "last_modified": "Tue, 21 Jul 2026 11:42:39 GMT",
+      "retrieved_at": "2026-09-28T20:17:06+00:00"
+    }
+  ],
+  "change": null
+}
