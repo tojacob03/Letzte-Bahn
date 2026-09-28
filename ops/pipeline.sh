@@ -28,4 +28,6 @@ fi
 
 if [ "$publish" = "true" ]; then
   bash ops/publish.sh
+else
+  bash ops/preview.sh
 fi
