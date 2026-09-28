@@ -30,7 +30,7 @@
     const [munis, region, change] = await Promise.all([
       A.getJSON('municipalities.geojson'),
       A.getJSON('region.json'),
-      A.getJSON('change.json', { optional: true }),
+      store.meta.change ? A.getJSON('change.json', { optional: true }) : null,
     ]);
     Object.assign(store, { munis, region, change });
     for (const feature of munis.features) muniIndex.set(feature.properties.ags, feature.properties);
@@ -498,8 +498,10 @@
       valueCell('population', props[`pc${threshold}`], true),
     ]);
     const caption = isCell
-      ? 'Minuten mit Bus, Bahn und zu Fuß ab diesem Quadrat, Median über alle Abfahrten im Zeitfenster'
-      : 'Minuten mit Bus, Bahn und zu Fuß, Median der Einwohner (die Hälfte braucht länger)';
+      ? 'Minuten mit Bus, Bahn und zu Fuß ab diesem Quadrat, Median über alle Abfahrten im '
+        + 'Zeitfenster. Schraffiert: länger als 2 Stunden oder nicht erreichbar.'
+      : 'Minuten mit Bus, Bahn und zu Fuß, Median der Einwohner (die Hälfte braucht länger). '
+        + 'Schraffiert: länger als 2 Stunden oder nicht erreichbar.';
     return A.el('figure', { class: 'timetable-wrap' }, [
       A.el('figcaption', { text: caption }),
       A.el('table', { class: 'timetable' }, [
@@ -510,7 +512,11 @@
   }
 
   function valueCell(kind, value, isCar = false) {
-    const cell = A.el('td', { class: isCar ? 'value car' : 'value', text: A.formatValue(kind, value) });
+    const missing = value === null || value === undefined;
+    // Minutes are named in the caption, so the cells stay narrow: numbers only.
+    const text = kind === 'time' ? (missing ? '–' : A.formatNumber(value)) : A.formatValue(kind, value);
+    const cell = A.el('td', { class: isCar ? 'value car' : 'value', text });
+    if (missing && kind === 'time') cell.title = 'länger als 2 Stunden oder nicht erreichbar';
     if (isCar) return cell;
     const cls = A.classOf(A.SCALES[kind], value);
     cell.style.backgroundColor = cls === null ? A.WORST : A.RAMP[cls];
@@ -610,9 +616,8 @@
       () => selectMuni(row.ags, { fly: true }),
     ));
     if (regional !== null && regional !== undefined) {
-      const basis = metric.kind === 'population' ? 'Median' : 'Median';
       items.push(compareRow(
-        `${store.meta.region.name} insgesamt (${basis})`, regional, max, metric.kind, false, null, true,
+        `${store.meta.region.name} insgesamt (Median)`, regional, max, metric.kind, false, null, true,
       ));
     }
     return A.el('section', { class: 'compare', 'aria-label': 'Vergleich mit den Nachbargemeinden' }, [
