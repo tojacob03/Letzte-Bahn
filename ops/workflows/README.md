@@ -1,10 +1,10 @@
-# Workflow definitions to install
+# Workflow definitions (reference copies)
 
-The GitHub connector used to build this repository may not create files in
-`.github/workflows/` (that needs the `workflow` token scope). These three files therefore
-live here and have to be moved once, e.g. in the GitHub web interface:
+These files are installed in `.github/workflows/`. They are kept here as the reference
+for the three workflows, because the GitHub connector used to build this repository may
+not write to `.github/workflows/` directly.
 
-| File here | Move to |
+| File here | Installed as |
 | --- | --- |
 | `ops/workflows/ci.yml` | `.github/workflows/ci.yml` |
 | `ops/workflows/pipeline.yml` | `.github/workflows/pipeline.yml` |
