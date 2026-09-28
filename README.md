@@ -12,6 +12,9 @@ the pilot region Saarland, on a weekday morning, a weekday evening and a Sunday.
 ## Key findings
 
 <!-- findings:start -->
+_Snapshot `saarland_2026-09-26` · timetable days 2026-09-29 (weekday) and 2026-10-04 (Sunday) · written by the pipeline, do not edit by hand._
+
+In 3 of 52 municipalities in Saarland, fewer than half of the residents can reach a family doctor's practice within 60 minutes by bus and train on a weekday evening (20:00–22:00). Within 45 minutes, the median resident reaches 27,854 people on a weekday morning but only 9,839 on a Sunday morning (65 % fewer). Getting to the nearest supermarket takes the median resident 3.7× as long by public transport as by car; for 62 % of residents it takes more than three times as long or is not possible within two hours.
 <!-- findings:end -->
 
 The numbers above are written by the pipeline on every run; see the

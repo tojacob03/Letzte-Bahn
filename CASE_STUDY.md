@@ -40,6 +40,14 @@ mornings, evenings and Sundays – built only from open data and running at zero
 ## Result
 
 <!-- results:start -->
+_Snapshot `saarland_2026-09-26` · timetable days 2026-09-29 (weekday) and 2026-10-04 (Sunday) · written by the pipeline, do not edit by hand._
+
+- Share of residents who cannot reach a family doctor within 60 minutes — Werktag 7–9 Uhr: 2 %; Werktag 20–22 Uhr: 9 %; Sonntag 10–12 Uhr: 18 %
+- Median number of people reachable within 45 minutes — Werktag 7–9 Uhr: 27,854; Werktag 20–22 Uhr: 15,815; Sonntag 10–12 Uhr: 9,839; by car: 985,163
+- Median ratio of public transport to car travel time to the nearest supermarket — Werktag 7–9 Uhr: 3.7×; Werktag 20–22 Uhr: 3.8×; Sonntag 10–12 Uhr: 3.8×
+- Share of residents without a hospital within 60 minutes — Werktag 7–9 Uhr: 26 %; Werktag 20–22 Uhr: 37 %; Sonntag 10–12 Uhr: 53 %
+- Share of residents within 30 minutes of a served rail station — Werktag 7–9 Uhr: 54 %; Werktag 20–22 Uhr: 50 %; Sonntag 10–12 Uhr: 48 %
+- Average reachable population within 45 minutes (weekday morning): highest in Saarbrücken (105,529), lowest in Nonnweiler (3,651).
 <!-- results:end -->
 
 The live atlas: https://tojacob03.github.io/Letzte-Bahn/

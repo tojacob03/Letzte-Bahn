@@ -1,0 +1,39 @@
+{
+  "gp_evening_60": {
+    "municipalities_below_half": 3,
+    "municipalities_total": 52,
+    "population_share_without_su_am": 0.182,
+    "population_share_without_wd_am": 0.023,
+    "population_share_without_wd_pm": 0.09
+  },
+  "hospital_60": {
+    "population_share_without_su_am": 0.528,
+    "population_share_without_wd_am": 0.264,
+    "population_share_without_wd_pm": 0.369
+  },
+  "municipal_gap_45": {
+    "best": 105529,
+    "best_label": "Saarbrücken",
+    "worst": 3651,
+    "worst_label": "Nonnweiler"
+  },
+  "pt_car_ratio_supermarket": {
+    "median_ratio_su_am": 3.75,
+    "median_ratio_wd_am": 3.667,
+    "median_ratio_wd_pm": 3.75,
+    "share_over_3_su_am": 0.624,
+    "share_over_3_wd_am": 0.617,
+    "share_over_3_wd_pm": 0.624
+  },
+  "rail_station_30": {
+    "population_share_within_su_am": 0.479,
+    "population_share_within_wd_am": 0.543,
+    "population_share_within_wd_pm": 0.499
+  },
+  "reach_45": {
+    "car_median": 985163,
+    "median_su_am": 9839,
+    "median_wd_am": 27854,
+    "median_wd_pm": 15815
+  }
+}
