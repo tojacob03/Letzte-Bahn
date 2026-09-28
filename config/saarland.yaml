@@ -1,0 +1,90 @@
+# Pilot region: the federal state of Saarland (52 municipalities) on a 500 m grid.
+# Paths are relative to the repository root. See METHODOLOGY.md for the reasoning.
+
+region:
+  id: saarland
+  name: Saarland
+  # Prefix of the Amtlicher Gemeindeschlüssel (AGS): "10" = Saarland.
+  ags_prefix: "10"
+  # Destinations and population within this distance of the region still count, so that
+  # municipalities at the edge are not penalised (restricted to German territory).
+  buffer_km: 20
+  # Extra margin of street and transit network beyond the buffer.
+  network_margin_km: 5
+
+grid:
+  cell_size_m: 500
+
+sources:
+  gtfs:
+    url: https://download.gtfs.de/germany/free/latest.zip
+    filename: gtfs_de_full.zip
+  osm:
+    - url: https://download.geofabrik.de/europe/germany/saarland-latest.osm.pbf
+      filename: saarland-latest.osm.pbf
+    - url: https://download.geofabrik.de/europe/germany/rheinland-pfalz-latest.osm.pbf
+      filename: rheinland-pfalz-latest.osm.pbf
+  census:
+    url: https://www.destatis.de/static/DE/zensus/gitterdaten/Zensus2022_Bevoelkerungszahl.zip
+    filename: Zensus2022_Bevoelkerungszahl.zip
+  boundaries:
+    url: https://daten.gdz.bkg.bund.de/produkte/vg/vg250_ebenen_0101/aktuell/vg250_01-01.utm32s.gpkg.ebenen.zip
+    filename: vg250_01-01.utm32s.gpkg.ebenen.zip
+
+calendar:
+  # Public holidays of this state are never used as analysis days.
+  holiday_state: SL
+  # Analysis weekday: 0 = Monday ... 4 = Friday. Tuesday is a typical school day.
+  weekday: 1
+  # The first days of a feed are skipped; they are sometimes incomplete.
+  min_days_after_feed_start: 2
+  # If a feed already covers the next timetable change, the new timetable is analysed.
+  timetable_changes:
+    - 2026-12-13
+    - 2027-12-12
+  # School holidays in Saarland and Rheinland-Pfalz (first and last day, union of both).
+  # Source: KMK Ferienkalender 2026/27 and 2027/28 (Stand 09.10.2025).
+  school_holidays:
+    - [2026-10-05, 2026-10-16]  # SL + RP autumn
+    - [2026-12-21, 2027-01-08]  # SL 21.12.-31.12., RP 23.12.-08.01.
+    - [2027-02-08, 2027-02-12]  # SL winter
+    - [2027-03-22, 2027-04-09]  # RP 22.03.-02.04., SL 30.03.-09.04.
+    - [2027-06-28, 2027-08-06]  # SL + RP summer
+    - [2027-10-04, 2027-10-15]  # SL + RP autumn
+    - [2027-12-20, 2028-01-07]  # SL 20.12.-31.12., RP 23.12.-07.01.
+    - [2028-02-21, 2028-02-29]  # SL winter
+    - [2028-04-10, 2028-04-21]  # RP 10.04.-21.04., SL 12.04.-21.04.
+    - [2028-07-03, 2028-08-11]  # SL + RP summer
+  # Optional fixed dates instead of the automatic choice:
+  # weekday_date: 2026-09-29
+  # sunday_date: 2026-10-04
+
+# Travel times are the median over all departure minutes in each window.
+windows:
+  - id: wd_am
+    label: Werktag 7–9 Uhr
+    day: weekday
+    start: "07:00"
+    minutes: 120
+  - id: wd_pm
+    label: Werktag 20–22 Uhr
+    day: weekday
+    start: "20:00"
+    minutes: 120
+  - id: su_am
+    label: Sonntag 10–12 Uhr
+    day: sunday
+    start: "10:00"
+    minutes: 120
+
+routing:
+  walk_speed_kmh: 4.5
+  # Longest walk for access, egress and walking-only trips (R5 applies it to all three).
+  max_walk_minutes: 30
+  # Destinations further away count as "not reachable".
+  max_trip_minutes: 120
+  max_rides: 8
+  population_thresholds: [30, 45, 60]
+  car: true
+  threads: 4
+  origin_chunk_size: 400
