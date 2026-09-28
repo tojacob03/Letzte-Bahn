@@ -1,0 +1,38 @@
+name: transit_atlas
+version: "0.1.0"
+config-version: 2
+profile: transit_atlas
+require-dbt-version: [">=1.10.0", "<1.11.0"]
+
+model-paths: ["models"]
+seed-paths: ["seeds"]
+test-paths: ["tests"]
+macro-paths: ["macros"]
+target-path: target
+clean-targets: ["target"]
+
+flags:
+  send_anonymous_usage_stats: false
+
+vars:
+  # Time windows (ids from the run configuration) that the findings refer to.
+  reference_window: wd_am
+  evening_window: wd_pm
+  sunday_window: su_am
+
+models:
+  transit_atlas:
+    +materialized: table
+    staging:
+      +materialized: view
+
+seeds:
+  transit_atlas:
+    categories:
+      +column_types:
+        category_id: varchar
+        label_de: varchar
+        label_en: varchar
+        sort_order: integer
+        is_sensitivity: boolean
+        source: varchar

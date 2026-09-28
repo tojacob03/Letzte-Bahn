@@ -1,0 +1,121 @@
+version: 2
+
+models:
+  - name: stg_cells
+    description: One row per grid cell of the study area (region plus buffer).
+    columns:
+      - name: cell_id
+        description: INSPIRE cell code, e.g. CRS3035RES500mN2750000E4150000.
+        data_tests: [unique, not_null]
+      - name: lon
+        description: Longitude of the population-weighted centroid (routing origin).
+      - name: population
+        data_tests:
+          - not_null
+          - value_between:
+              min_value: 0
+      - name: is_origin
+        description: True if people living in the cell belong to the region.
+
+  - name: stg_cell_municipality
+    description: Population of each cell per municipality of the region.
+    data_tests:
+      - unique_combination:
+          columns: [cell_id, ags]
+    columns:
+      - name: cell_id
+        data_tests:
+          - relationships:
+              to: ref('stg_cells')
+              field: cell_id
+      - name: ags
+        data_tests:
+          - relationships:
+              to: ref('stg_municipalities')
+              field: ags
+      - name: population
+        data_tests:
+          - value_between:
+              min_value: 1
+
+  - name: stg_municipalities
+    description: Municipalities of the region with geometry (DuckDB spatial, EPSG:25832).
+    columns:
+      - name: ags
+        description: Amtlicher Gemeindeschlüssel.
+        data_tests: [unique, not_null]
+
+  - name: stg_pois
+    description: Destinations; an OSM object can belong to more than one category.
+    data_tests:
+      - unique_combination:
+          columns: [poi_id, category]
+    columns:
+      - name: category
+        data_tests:
+          - not_null
+          - accepted_values:
+              values: [gp, pharmacy, supermarket, primary_school, secondary_school, hospital,
+                       rail_station]
+      - name: is_strict
+        description: For family doctors, true if the object is clearly tagged as one.
+
+  - name: stg_station_service
+    description: Number of train departures per rail station and time window.
+    data_tests:
+      - unique_combination:
+          columns: [poi_id, window_id]
+    columns:
+      - name: window_id
+        data_tests:
+          - relationships:
+              to: ref('stg_windows')
+              field: window_id
+
+  - name: stg_windows
+    columns:
+      - name: window_id
+        data_tests: [unique, not_null]
+      - name: day_type
+        data_tests:
+          - accepted_values:
+              values: [weekday, sunday]
+
+  - name: stg_thresholds
+    columns:
+      - name: threshold_min
+        data_tests: [unique, not_null]
+
+  - name: stg_destinations
+    columns:
+      - name: dest_idx
+        data_tests: [unique, not_null]
+      - name: dest_kind
+        data_tests:
+          - accepted_values:
+              values: [cell, poi]
+
+  - name: stg_travel_times_pt
+    description: Public transport travel times (median over the departure window).
+    columns:
+      - name: window_id
+        data_tests:
+          - relationships:
+              to: ref('stg_windows')
+              field: window_id
+      - name: minutes
+        data_tests:
+          - not_null
+          - value_between:
+              min_value: 0
+
+  - name: stg_travel_times_car
+    description: Car travel times (free flow, no parking search).
+    columns:
+      - name: minutes
+        data_tests:
+          - value_between:
+              min_value: 0
+
+  - name: stg_previous_municipality_metrics
+    description: Metrics of the previous snapshot, empty until two snapshots exist.

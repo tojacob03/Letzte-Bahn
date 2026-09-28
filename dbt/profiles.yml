@@ -1,0 +1,9 @@
+transit_atlas:
+  target: prod
+  outputs:
+    prod:
+      type: duckdb
+      path: "{{ env_var('ATLAS_DUCKDB_PATH', 'data/warehouse/atlas.duckdb') }}"
+      extensions:
+        - spatial
+      threads: 4
