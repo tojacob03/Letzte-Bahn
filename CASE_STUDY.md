@@ -10,10 +10,11 @@ what can I reach in reasonable time – and what if I need it in the evening or 
 Sunday?* Existing accessibility studies are often one-off reports with a single departure
 time and no way to check the numbers.
 
-Goal: a public, reproducible atlas for a pilot region (Saarland) that measures, for every
-inhabited 500 m square and every municipality, the travel time to everyday destinations,
-the number of people within reach, the gap to the car, and the difference between weekday
-mornings, evenings and Sundays – built only from open data and running at zero cost.
+Goal: a public, reproducible atlas – designed to scale to all of Germany, starting with
+the pilot region Saarland – that measures, for every inhabited 500 m square and every
+municipality, the travel time to everyday destinations, the number of people within
+reach, the gap to the car, and the difference between weekday mornings, evenings and
+Sundays – built only from open data and running at zero cost.
 
 ## Approach
 
@@ -90,8 +91,13 @@ large: from Saarbrücken, residents reach on average about 29 times as many peop
 - The pipeline runs twice a month. Once the free feed covers the timetable change on
   13 December 2026, the next run analyses the new timetable and the map shows the change
   for every municipality.
-- More regions are a configuration file away (`config/*.yaml` with an AGS prefix); each
-  federal state fits into one free GitHub Actions job.
+- **Scaling to all of Germany.** Every input is already national (GTFS feed, Zensus
+  grid, VG250), and a region is defined only by a configuration file with an AGS prefix –
+  a federal state, a Regierungsbezirk or a district. Every municipality belongs to exactly
+  one region, so regional results can be merged. At 62 minutes for Saarland, all of
+  Germany stays free as one GitHub Actions job per federal state (large states split by
+  Regierungsbezirk); what remains to build is the job matrix and a vector-tile map for the
+  whole country (see METHODOLOGY.md, section 11).
 
 ## Transferable skills
 

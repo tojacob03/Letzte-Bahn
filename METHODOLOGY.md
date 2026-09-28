@@ -8,7 +8,8 @@ where it can be wrong. A shorter German version is on the website (`web/methodik
 ## 1. Study area and grid
 
 - **Pilot region:** Saarland (all municipalities with an AGS starting with `10`), set in
-  `config/saarland.yaml`. Any region can be configured by its AGS prefix.
+  `config/saarland.yaml`. Any region can be configured by its AGS prefix; section 11
+  describes how the same pipeline covers all of Germany.
 - **Buffer:** destinations and residents up to **20 km** beyond the region count, so that
   places near the border are not penalised. The buffer is restricted to German territory,
   because population and destinations abroad are not covered by the same data. The street
@@ -177,3 +178,29 @@ the December timetable change.
   access can produce implausibly long car times (see section 9).
 - **Accessibility needs** (step-free access, walking speed of older people) are not
   modelled; 4.5 km/h is an average adult pace.
+
+## 11. Scaling to all of Germany
+
+Saarland is the pilot, not a limit of the design. Nothing in the pipeline is specific to it:
+
+- **All inputs are national already.** The timetable is the Germany-wide GTFS feed, the
+  Zensus grid and VG250 cover the whole country, and Geofabrik publishes an OSM extract for
+  every federal state.
+- **A region is one configuration file.** `region.ags_prefix` accepts 2 to 8 digits, so a
+  federal state (`"09"` Bayern), a Regierungsbezirk (`"091"` Oberbayern) or a district
+  (`"10046"` St. Wendel, used by the smoke test) runs without code changes. The file also
+  lists the OSM extracts of the state and its neighbours (for the 20 km buffer), the state
+  for public holidays (all 16 states are implemented in `service_dates.py`) and the school
+  holidays from the KMK calendar.
+- **Regional results can be merged.** Every municipality belongs to exactly one region;
+  the buffer supplies destinations and reachable population but never municipality
+  results. Snapshot IDs carry the region (`<region>_<feed date>`), so snapshots of several
+  regions live side by side in `data/published/snapshots/`.
+- **Zero cost through splitting.** The full Saarland run (4,544 origins) took 62 minutes on
+  a free GitHub Actions runner; a job may run at most 6 hours. All of Germany therefore runs
+  as one job per federal state – large states split by Regierungsbezirk – in an Actions
+  matrix. Run times for the large states have not been measured yet.
+
+Not built yet: the Actions matrix itself and a Germany-wide map. The website currently
+loads one region as GeoJSON; for the whole country the cells would be served as vector
+tiles (for example PMTiles on GitHub Pages) with a combined municipality table.
