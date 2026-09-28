@@ -37,7 +37,9 @@ def build_parser() -> argparse.ArgumentParser:
     )
     commands = parser.add_subparsers(dest="command", required=True)
     run = commands.add_parser("run", help="run one or more pipeline steps")
-    run.add_argument("--config", required=True, type=Path, help="YAML file, e.g. config/saarland.yaml")
+    run.add_argument(
+        "--config", required=True, type=Path, help="YAML file, e.g. config/saarland.yaml"
+    )
     run.add_argument(
         "--steps",
         default=",".join(STEPS),
