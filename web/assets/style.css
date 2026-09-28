@@ -90,7 +90,7 @@ a:hover { color: var(--sign-green); }
 
 .map-layout {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 410px;
+  grid-template-columns: minmax(0, 1fr) 440px;
   height: calc(100dvh - var(--header-height));
   min-height: 600px;
 }
@@ -392,9 +392,9 @@ fieldset { margin: 1rem 0 0; padding: 0; border: 0; min-width: 0; }
 .chart .grid { stroke: #e3e7ec; stroke-width: 1; }
 .chart .grid-strong { stroke: #97a1b0; }
 .chart .baseline { stroke: #b3bbc6; stroke-width: 1; }
-.chart .axis-label { font-size: 11px; fill: var(--muted); }
-.chart .row-label { font-size: 12px; fill: var(--ink); }
-.chart .value-label { font-size: 12px; font-weight: 600; fill: var(--ink-2); }
+.chart .axis-label { font-size: 12px; fill: var(--muted); }
+.chart .row-label { font-size: 13px; fill: var(--ink); }
+.chart .value-label { font-size: 13px; font-weight: 600; fill: var(--ink-2); }
 .chart .connector { stroke: #c3c9d2; stroke-width: 2; }
 .chart .dot { stroke: var(--surface); stroke-width: 2; }
 .chart .row-hit { fill: transparent; }

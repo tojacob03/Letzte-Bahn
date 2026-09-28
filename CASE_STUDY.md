@@ -1,5 +1,7 @@
 # Case study: Letzte Bahn – how well is every place connected by bus and train?
 
+**Live atlas:** https://tojacob03.github.io/Letzte-Bahn/ · **Code and data:** this repository
+
 ## Problem
 
 Whether you can live without a car depends on where you live. Timetables answer "when is
@@ -39,6 +41,16 @@ mornings, evenings and Sundays – built only from open data and running at zero
 
 ## Result
 
+The first published snapshot (`saarland_2026-09-26`) covers all 52 municipalities of
+Saarland: 4,544 inhabited 500 m squares as starting points, 1,006,204 residents, and –
+including a 20 km buffer inside Germany – 363 doctors' practices, 352 pharmacies,
+562 supermarkets, 351 primary and 119 secondary schools, 34 hospitals and 131 served rail
+stations. The complete run (download, clipping, routing of three two-hour windows plus the
+car, dbt build with all tests, export, screenshot, publication) took 62 minutes on a free
+GitHub Actions runner.
+
+The headline numbers, written automatically by the pipeline:
+
 <!-- results:start -->
 _Snapshot `saarland_2026-09-26` · timetable days 2026-09-29 (weekday) and 2026-10-04 (Sunday) · written by the pipeline, do not edit by hand._
 
@@ -50,7 +62,36 @@ _Snapshot `saarland_2026-09-26` · timetable days 2026-09-29 (weekday) and 2026-
 - Average reachable population within 45 minutes (weekday morning): highest in Saarbrücken (105,529), lowest in Nonnweiler (3,651).
 <!-- results:end -->
 
-The live atlas: https://tojacob03.github.io/Letzte-Bahn/
+What this means in plain words (first snapshot): the weekday-morning network is dense –
+almost everyone reaches a family doctor within an hour – but the evening and especially
+Sunday are where people without a car fall behind. The typical resident reaches about a
+third as many people within 45 minutes on a Sunday morning as on a weekday morning, while
+by car practically the whole state is within reach. The gap between municipalities is
+large: from Saarbrücken, residents reach on average about 29 times as many people within
+45 minutes as from Nonnweiler.
+
+### Checks that caught real problems
+
+- **Two smoke runs before the full run** (one district, 1 km grid, in CI). The first one
+  showed 0 hospitals in the district: the local hospital is tagged with a psychiatric
+  speciality in OpenStreetMap and was excluded by a too simple rule. It also left half of
+  the schools unclassified, because many primary schools in Saarland are just called
+  "…schule". Both rules were fixed and covered by new unit tests.
+- **Validation against official figures:** the grid population of the region
+  (1,006,204) matches the official Zensus 2022 total for Saarland (1,006,870) to within
+  0.07 %; the remainder is explained by the statistical confidentiality of the grid data.
+- **Plausibility of the city centre:** in the densest Saarbrücken squares the nearest
+  doctor, supermarket and pharmacy are 0–13 minutes away; a single cell with an odd car
+  time (a start point next to a road without car access) is documented as a known
+  limitation instead of being hidden.
+
+### Next steps
+
+- The pipeline runs twice a month. Once the free feed covers the timetable change on
+  13 December 2026, the next run analyses the new timetable and the map shows the change
+  for every municipality.
+- More regions are a configuration file away (`config/*.yaml` with an AGS prefix); each
+  federal state fits into one free GitHub Actions job.
 
 ## Transferable skills
 
@@ -60,6 +101,7 @@ The live atlas: https://tojacob03.github.io/Letzte-Bahn/
 | Python pipeline on messy public data (GTFS, OSM, census) | ETL/ELT, integrating heterogeneous sources |
 | dbt layers, macros, tests and documentation | Analytics engineering, maintainable SQL models, data quality |
 | Defining KPIs precisely (median over departures, population weighting, NULL semantics) | KPI definitions that stakeholders can trust and reproduce |
+| Validating results against an independent official figure | Reconciliation, plausibility checks before reporting |
 | Snapshots and change over time | Period-over-period reporting, versioned figures |
 | Findings and charts written for non-experts | Management reporting and data storytelling |
 | Zero-cost automation in GitHub Actions | CI/CD, scheduling, cost awareness |
