@@ -44,15 +44,22 @@ _SECONDARY = re.compile(
 _NOT_GENERAL_SCHOOL = re.compile(
     r"berufs|\bbbz\b|fachschule|fachoberschule|hochschule|universit|musikschule|fahrschule|"
     r"tanzschule|volkshochschule|sprachschule|förderschule|foerderschule|förderzentrum|"
-    r"sonderschule|kindergarten|\bkita\b|abendschule|kolleg\b|akademie|nachhilfe"
+    r"sonderschule|kindergarten|\bkita\b|abendschule|kolleg\b|akademie|nachhilfe|"
+    r"jagdschule|reitschule|hundeschule|kochschule|pflegeschule|ausbildung|lebenshilfe|"
+    r"waldklassenzimmer|waldschulprojekt|kurswerkstatt|kulturzentrum|landesinstitut|"
+    r"technikum|für wirtschaft|schulhof|\btrakt\b|ehemalig|école|ecole|lycée|collège"
 )
+# Many primary schools in Saarland carry only a name such as "Aschbachschule".
+_GENERIC_SCHOOL_NAME = re.compile(r"schule\b")
 _SCHOOL_TEXT_KEYS = ("name", "official_name", "short_name", "school", "school:de", "school:type")
 
 _HOSPITAL_EXCLUDE = re.compile(
     r"reha|tagesklinik|psychiatr|psychosomat|hospiz|pflegeheim|seniorenheim|kurklinik|"
     r"suchtklinik|forensi|tierklinik"
 )
-_HOSPITAL_EXCLUDED_SPECIALITIES = frozenset({"psychiatry", "rehabilitation"})
+_SPECIALISED_ONLY = frozenset(
+    {"psychiatry", "child_psychiatry", "psychotherapy", "psychosomatics", "rehabilitation"}
+)
 
 
 def _values(tags: Mapping[str, str], key: str) -> set[str]:
@@ -74,31 +81,45 @@ def gp_variant(tags: Mapping[str, str]) -> str | None:
     return None
 
 
-def school_levels(tags: Mapping[str, str]) -> set[str]:
-    """``primary_school`` and/or ``secondary_school`` for general-education schools."""
+def school_levels(tags: Mapping[str, str]) -> dict[str, bool]:
+    """``{level: is_strict}`` for general-education schools.
+
+    ``is_strict`` is False for schools that only count as primary schools because of a
+    generic name without any other hint.
+    """
     if tags.get("amenity") != "school":
-        return set()
+        return {}
     text = " ".join(tags.get(key, "") for key in _SCHOOL_TEXT_KEYS).lower()
     named_primary = bool(_PRIMARY.search(text))
     named_secondary = bool(_SECONDARY.search(text))
     if _NOT_GENERAL_SCHOOL.search(text) and not (named_primary or named_secondary):
-        return set()
+        return {}
     isced = set(re.findall(r"\d", tags.get("isced:level", "")))
-    levels = set()
-    if named_primary or "1" in isced:
-        levels.add("primary_school")
-    if named_secondary or isced & {"2", "3"}:
-        levels.add("secondary_school")
+    grades = [int(value) for value in re.findall(r"\d+", tags.get("grades", ""))]
+    levels: dict[str, bool] = {}
+    if named_primary or "1" in isced or (grades and min(grades) <= 4):
+        levels["primary_school"] = True
+    if named_secondary or isced & {"2", "3"} or (grades and max(grades) >= 5):
+        levels["secondary_school"] = True
+    if not levels and _GENERIC_SCHOOL_NAME.search(tags.get("name", "").lower()):
+        levels["primary_school"] = False
     return levels
 
 
 def is_hospital(tags: Mapping[str, str]) -> bool:
-    """General hospitals; rehabilitation, psychiatric and day clinics are excluded."""
+    """General hospitals. Purely psychiatric, rehabilitation and day clinics without an
+    emergency department are excluded, as are former hospitals."""
     if tags.get("amenity") != "hospital" and tags.get("healthcare") != "hospital":
         return False
-    if _HOSPITAL_EXCLUDE.search(tags.get("name", "").lower()):
+    name = tags.get("name", "").lower()
+    if "ehemalig" in name:
         return False
-    return not _values(tags, "healthcare:speciality") & _HOSPITAL_EXCLUDED_SPECIALITIES
+    if tags.get("emergency") == "yes":
+        return True
+    if _HOSPITAL_EXCLUDE.search(name):
+        return False
+    specialities = _values(tags, "healthcare:speciality")
+    return not (specialities and specialities <= _SPECIALISED_ONLY)
 
 
 def classify(tags: Mapping[str, str]) -> dict[str, bool]:
@@ -111,8 +132,8 @@ def classify(tags: Mapping[str, str]) -> dict[str, bool]:
         result["pharmacy"] = True
     if tags.get("shop") == "supermarket":
         result["supermarket"] = True
-    for level in sorted(school_levels(tags)):
-        result[level] = True
+    for level, strict in sorted(school_levels(tags).items()):
+        result[level] = strict
     if is_hospital(tags):
         result["hospital"] = True
     return result

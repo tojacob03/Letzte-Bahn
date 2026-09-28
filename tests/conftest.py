@@ -169,6 +169,8 @@ def fixture_warehouse(tmp_path_factory: pytest.TempPathFactory):
     paths = Paths(root).ensure()
     write_staging_fixture(paths.staging)
     warehouse.dbt(paths, "build")
-    con = duckdb.connect(str(paths.warehouse / warehouse.DATABASE), read_only=True)
+    # dbt-duckdb keeps its database open in this process; DuckDB only allows further
+    # connections to the same file with the same (default) configuration.
+    con = duckdb.connect(str(paths.warehouse / warehouse.DATABASE))
     yield con
     con.close()

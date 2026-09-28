@@ -6,6 +6,7 @@ from transit_atlas.pois import classify
 
 DOCTOR = {"amenity": "doctors"}
 SCHOOL = {"amenity": "school"}
+HOSPITAL = {"amenity": "hospital", "healthcare": "hospital"}
 
 
 @pytest.mark.parametrize(
@@ -38,10 +39,16 @@ def test_health_and_shopping(tags, expected):
             {"primary_school": True, "secondary_school": True},
         ),
         ({**SCHOOL, "isced:level": "1"}, {"primary_school": True}),
+        ({**SCHOOL, "grades": "5-10"}, {"secondary_school": True}),
         ({**SCHOOL, "name": "Gymnasium am Rotenbühl"}, {"secondary_school": True}),
+        # generic names are mostly primary schools in Saarland, flagged as not strict
+        ({**SCHOOL, "name": "Aschbachschule"}, {"primary_school": False}),
+        ({**SCHOOL, "name": "Schule am See"}, {"primary_school": False}),
         ({**SCHOOL, "name": "Berufsbildungszentrum Saarlouis", "isced:level": "3"}, {}),
         ({**SCHOOL, "name": "Förderschule Lernen"}, {}),
-        ({**SCHOOL, "name": "Schule am See"}, {}),
+        ({**SCHOOL, "name": "Jagdschule Blatt"}, {}),
+        ({**SCHOOL, "name": "Waldklassenzimmer"}, {}),
+        ({**SCHOOL, "building": "yes"}, {}),
     ],
 )
 def test_schools(tags, expected):
@@ -51,9 +58,16 @@ def test_schools(tags, expected):
 @pytest.mark.parametrize(
     ("tags", "expected"),
     [
-        ({"amenity": "hospital", "name": "Klinikum Saarbrücken"}, {"hospital": True}),
-        ({"amenity": "hospital", "name": "Reha-Klinik Am Wald"}, {}),
-        ({"healthcare": "hospital", "healthcare:speciality": "psychiatry"}, {}),
+        ({**HOSPITAL, "name": "Klinikum Saarbrücken"}, {"hospital": True}),
+        ({**HOSPITAL, "name": "Reha-Klinik Am Wald"}, {}),
+        ({**HOSPITAL, "healthcare:speciality": "psychiatry"}, {}),
+        # a general hospital with a psychiatric ward and an emergency department counts
+        (
+            {**HOSPITAL, "name": "Marienkrankenhaus Sankt Wendel", "emergency": "yes",
+             "healthcare:speciality": "geriatrics;psychiatry"},
+            {"hospital": True},
+        ),
+        ({**HOSPITAL, "name": "ehemalige Knappschaftsklinik Quierschied"}, {}),
     ],
 )
 def test_hospitals(tags, expected):

@@ -1,0 +1,58 @@
+name: Data pipeline
+
+on:
+  workflow_dispatch:
+    inputs:
+      config:
+        description: Configuration file
+        default: config/saarland.yaml
+  schedule:
+    # 1st and 16th of every month: a new timetable snapshot every two weeks
+    - cron: "17 3 1,16 * *"
+  push:
+    branches: [main, dev]
+    paths:
+      - "src/**"
+      - "dbt/**"
+      - "config/**"
+      - "ops/**"
+      - "pyproject.toml"
+
+concurrency:
+  group: pipeline-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+
+jobs:
+  run:
+    name: Run pipeline
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+    permissions:
+      contents: write
+    env:
+      # main: full pilot region and publish; other branches: small smoke run only
+      CONFIG: ${{ inputs.config || (github.ref == 'refs/heads/main' && 'config/saarland.yaml' || 'config/smoke.yaml') }}
+      PUBLISH: ${{ github.ref == 'refs/heads/main' }}
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+      - uses: astral-sh/setup-uv@v6
+        with:
+          python-version: "3.12"
+      - name: Install osmium-tool
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq osmium-tool
+      - name: Run the pipeline (see ops/pipeline.sh)
+        run: bash ops/pipeline.sh "$CONFIG" "$PUBLISH"
+
+  deploy:
+    name: Deploy website
+    needs: run
+    if: github.ref == 'refs/heads/main'
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    uses: ./.github/workflows/pages.yml
