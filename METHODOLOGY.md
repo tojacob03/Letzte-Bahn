@@ -31,9 +31,9 @@ where it can be wrong. A shorter German version is on the website (`web/methodik
 | Family doctor, strict (sensitivity) | OSM | Only `healthcare:speciality` general / Allgemeinmedizin or a name that says so |
 | Pharmacy | OSM `amenity=pharmacy` / `healthcare=pharmacy` | all |
 | Supermarket | OSM `shop=supermarket` | all |
-| Primary school | OSM `amenity=school` | name contains "Grundschule" and similar, or ISCED level 1 |
-| Secondary school | OSM `amenity=school` | Gymnasium, Gemeinschaftsschule, Realschule, Gesamtschule and similar, or ISCED 2/3; vocational and special-needs schools excluded |
-| Hospital | OSM `amenity=hospital` / `healthcare=hospital` | rehabilitation, psychiatric and day clinics excluded |
+| Primary school | OSM `amenity=school` | name contains "Grundschule" and similar, ISCED level 1 or grades up to 4; a school with only a generic name ("Aschbachschule") counts as primary school, flagged as not strict |
+| Secondary school | OSM `amenity=school` | Gymnasium, Gemeinschaftsschule, Realschule, Gesamtschule and similar, ISCED 2/3 or grades from 5; vocational, special-needs and non-school institutions excluded |
+| Hospital | OSM `amenity=hospital` / `healthcare=hospital` | hospitals with an emergency department always count; purely psychiatric, rehabilitation and day clinics and former hospitals are excluded |
 | Rail station | GTFS | stops served by heavy rail (regional, S-Bahn, long-distance; no tram/light rail), counted per parent station |
 
 Areas (buildings, sites) are represented by an interior point. Where tagging is
@@ -140,7 +140,27 @@ the December timetable change.
   destinations never reached, OSM schools that could not be classified, and the number of
   trips on the analysis days.
 
-## 9. Known sources of error
+## 9. Validation of the first snapshot (`saarland_2026-09-26`)
+
+- **Population:** the grid population assigned to Saarland's municipalities is 1,006,204;
+  the official Zensus 2022 total for Saarland is 1,006,870. The difference of 0.07 % is
+  consistent with the confidentiality procedure of the grid data.
+- **Smoke runs:** two runs on one district before the first full run found two faulty
+  destination rules (a general hospital with a psychiatric ward was excluded; many primary
+  schools with generic names were unclassified). Both were fixed and covered by tests.
+- **Unclassified schools:** 198 of 776 OSM school objects in the extract (including those
+  outside the study area) fit no category after the fix; most are driving, music or other
+  non-general schools.
+- **Doctors:** 130 of 363 counted practices are explicitly tagged as family doctors; the
+  others are included by the conservative default rule (section 2).
+- **Linking:** 2–3 of 4,544 origins per time window reached no destination at all.
+- **City-centre plausibility:** in the densest Saarbrücken cells the nearest doctor,
+  supermarket and pharmacy are 0–13 minutes away; hospitals 12–39 minutes by public
+  transport and 4–12 minutes by car. One cell shows a longer car time than public
+  transport time (55 vs. 39 minutes to a hospital), because its starting point lies on a
+  street without car access; R5 then links the car to a distant road.
+
+## 10. Known sources of error
 
 - **Scheduled timetable only.** No real-time data, delays, cancellations or crowding.
 - **Gaps in GTFS.** Missing or incomplete lines lower accessibility; construction works on
@@ -153,6 +173,7 @@ the December timetable change.
 - **Border effects:** population and destinations in France and Luxembourg are missing,
   although cross-border trips are common in Saarland.
 - **Grid:** a 500 m cell has one origin; walking times within the cell are not captured.
-- **Car times** ignore congestion and parking.
+- **Car times** ignore congestion and parking; starting points on streets without car
+  access can produce implausibly long car times (see section 9).
 - **Accessibility needs** (step-free access, walking speed of older people) are not
   modelled; 4.5 km/h is an average adult pace.
