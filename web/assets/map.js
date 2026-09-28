@@ -451,7 +451,7 @@
     const subline = isCell
       ? `${A.formatNumber(props.pop)} Einwohner auf ${size} × ${size} Metern`
       : `${muni.kreis}, ${A.formatNumber(muni.pop)} Einwohner`;
-    root.replaceChildren(
+    const parts = [
       A.el('div', { class: 'place-head' }, [
         A.el('h2', { text: heading }),
         A.el('p', { class: 'place-sub', text: subline }),
@@ -469,7 +469,9 @@
       carComparison(props, isCell),
       changeNote(muni),
       neighbours(muni),
-    );
+    ];
+    // replaceChildren() would render a missing (null) part as the text "null"
+    root.replaceChildren(...parts.filter(Boolean));
   }
 
   function referenceThreshold() {
