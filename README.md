@@ -1,137 +1,169 @@
-# Letzte Bahn – public transport accessibility atlas
+# Letzte Bahn – ÖPNV-Erreichbarkeitsatlas
 
-**How many people and everyday destinations can I reach from here within 30, 45 and 60
-minutes by bus and train – and how does my place compare with its neighbours and with the
-car?** The atlas answers this for every inhabited 500 m square and every municipality of
-the pilot region Saarland, on a weekday morning, a weekday evening and a Sunday.
+**Wie viele Menschen und welche Ziele des Alltags erreiche ich von hier in 30, 45 und
+60 Minuten mit Bus und Bahn – und wie steht mein Ort im Vergleich zu den Nachbarorten und
+zum Auto da?** Der Atlas beantwortet das für jedes bewohnte 500-m-Quadrat und jede Gemeinde,
+jeweils für einen Werktagmorgen, einen Werktagabend und einen Sonntag. Pilotgebiet ist das
+Saarland; die Pipeline ist so gebaut, dass sie **auf ganz Deutschland skaliert** (siehe
+[Skalierung auf ganz Deutschland](#skalierung-auf-ganz-deutschland)).
 
-**Live:** https://tojacob03.github.io/Letzte-Bahn/ (website in German)
+**Live:** https://tojacob03.github.io/Letzte-Bahn/
 
-![Map: travel time to the nearest family doctor on a weekday evening](docs/screenshot.png)
+![Karte: Reisezeit zur nächsten Hausarztpraxis an einem Werktagabend](docs/screenshot.png)
 
-## Key findings
+## Wichtigste Befunde
 
 <!-- findings:start -->
-_Snapshot `saarland_2026-09-26` · timetable days 2026-09-29 (weekday) and 2026-10-04 (Sunday) · written by the pipeline, do not edit by hand._
+_Stand `saarland_2026-09-26` · Fahrplantage 29.09.2026 (Werktag) und 04.10.2026 (Sonntag) · von der Pipeline geschrieben, bitte nicht von Hand ändern._
 
-In 3 of 52 municipalities in Saarland, fewer than half of the residents can reach a family doctor's practice within 60 minutes by bus and train on a weekday evening (20:00–22:00). Within 45 minutes, the median resident reaches 27,854 people on a weekday morning but only 9,839 on a Sunday morning (65 % fewer). Getting to the nearest supermarket takes the median resident 3.7× as long by public transport as by car; for 62 % of residents it takes more than three times as long or is not possible within two hours.
+In 3 von 52 Gemeinden im Gebiet Saarland erreicht an einem Werktagabend (20:00–22:00 Uhr) weniger als die Hälfte der Einwohner eine Hausarztpraxis innerhalb von 60 Minuten mit Bus und Bahn. In 45 Minuten erreicht der mittlere Einwohner (Median) an einem Werktagmorgen 27.854 Menschen, an einem Sonntagvormittag nur 9.839 (65 % weniger). Zum nächsten Supermarkt braucht der mittlere Einwohner mit Bus und Bahn 3,7-mal so lange wie mit dem Auto; für 62 % der Einwohner dauert es mehr als dreimal so lange oder ist in zwei Stunden gar nicht möglich.
 <!-- findings:end -->
 
-The numbers above are written by the pipeline on every run; see the
-[analysis page](https://tojacob03.github.io/Letzte-Bahn/analyse.html) for charts.
+Die Zahlen oben schreibt die Pipeline bei jedem Lauf neu; Diagramme dazu stehen auf der
+[Analyseseite](https://tojacob03.github.io/Letzte-Bahn/analyse.html).
 
-## What it measures
+## Was gemessen wird
 
-For every inhabited 500 m cell (routing starts at the population-weighted centre) and
-three time windows – weekday 07–09, weekday 20–22, Sunday 10–12:
+Für jedes bewohnte 500-m-Quadrat (Start am bevölkerungsgewichteten Schwerpunkt) und drei
+Zeitfenster – werktags 7–9 Uhr, werktags 20–22 Uhr, sonntags 10–12 Uhr:
 
-1. **Travel time to the nearest destination** of each category: family doctor, pharmacy,
-   supermarket, primary school, secondary school, hospital, rail station with regional or
-   long-distance trains.
-2. **Reachable population** within 30/45/60 minutes, a stand-in for opportunities because
-   open job data on a small grid does not exist.
-3. **Public transport vs. car:** ratio of travel times to the same destinations.
-4. **Evening and Sunday gap:** the same metrics in all three windows.
-5. **Change between timetable snapshots**, as soon as two snapshots exist.
+1. **Reisezeit zum nächsten Ziel** jeder Kategorie: Hausarzt, Apotheke, Supermarkt,
+   Grundschule, weiterführende Schule, Krankenhaus, Bahnhof mit Regional- oder Fernverkehr.
+2. **Erreichbare Bevölkerung** in 30/45/60 Minuten – als Ersatz für Arbeitsplätze, weil es
+   offene Beschäftigtendaten auf einem so feinen Raster nicht gibt.
+3. **ÖPNV im Vergleich zum Auto:** Verhältnis der Reisezeiten zu denselben Zielen.
+4. **Abend- und Sonntagslücke:** dieselben Kennzahlen in allen drei Zeitfenstern.
+5. **Veränderung zwischen Fahrplanständen**, sobald zwei Stände vorliegen.
 
-Travel times are the **median over every departure minute of the window**, not a single
-departure. Municipal values are population-weighted medians and shares.
+Reisezeiten sind der **Median über jede Abfahrtsminute des Zeitfensters**, nicht eine
+einzelne Abfahrt. Gemeindewerte sind bevölkerungsgewichtete Mediane und Anteile.
 
-## Architecture
+## Architektur
 
 ```mermaid
 flowchart LR
-    subgraph Sources
-        G[GTFS Germany<br/>gtfs.de / DELFI]
+    subgraph Quellen
+        G[GTFS Deutschland<br/>gtfs.de / DELFI]
         O[OpenStreetMap<br/>Geofabrik]
-        Z[Zensus 2022<br/>100 m grid]
-        V[VG250<br/>boundaries]
+        Z[Zensus 2022<br/>100-m-Raster]
+        V[VG250<br/>Verwaltungsgrenzen]
     end
-    subgraph Python["Python pipeline (src/transit_atlas)"]
-        D[download<br/>manifest + checksums] --> P[prepare<br/>clip GTFS and OSM, grid,<br/>destinations, analysis days]
-        P --> R[route<br/>R5 via r5py,<br/>parallel origins]
+    subgraph Python["Python-Pipeline (src/transit_atlas)"]
+        D[download<br/>Manifest + Prüfsummen] --> P[prepare<br/>GTFS und OSM zuschneiden, Raster,<br/>Ziele, Analysetage]
+        P --> R[route<br/>R5 über r5py,<br/>parallele Startpunkte]
     end
     subgraph dbt["dbt + DuckDB"]
-        S[staging] --> I[intermediate] --> M[marts + findings<br/>+ data tests]
+        S[staging] --> I[intermediate] --> M[marts + Befunde<br/>+ Datentests]
     end
-    subgraph Publish
-        E[export<br/>GeoJSON / JSON / CSV] --> W[static website<br/>GitHub Pages]
-        E --> H[snapshot history<br/>data/published]
+    subgraph Veröffentlichung
+        E[export<br/>GeoJSON / JSON / CSV] --> W[statische Website<br/>GitHub Pages]
+        E --> H[Snapshot-Historie<br/>data/published]
     end
     G & O & Z & V --> D
-    R -->|Parquet contract| S
+    R -->|Parquet-Vertrag| S
     M --> E
-    H -. previous snapshot .-> S
+    H -. vorheriger Snapshot .-> S
 ```
 
-- **Python** does what SQL is bad at: streaming the 2 GB national timetable out of the zip
-  without extracting it, spatial joins, OSM parsing and routing. It hands typed Parquet
-  tables to dbt (`src/transit_atlas/staging.py` is the contract).
-- **dbt on DuckDB** models everything analytical: nearest destination per category and
-  window, reachable population, weighted medians, neighbours (DuckDB spatial), change
-  against the previous snapshot and the headline findings. The
-  [dbt documentation with lineage graph](https://tojacob03.github.io/Letzte-Bahn/dbt/)
-  is published with the site.
-- **GitHub Actions** runs everything for free: CI on every push, the full pipeline twice a
-  month and on every change to the pipeline code, then publishes data and website.
+- **Python** übernimmt, was in SQL schlecht geht: den 2 GB großen bundesweiten Fahrplan
+  direkt aus dem Zip-Archiv streamen, räumliche Verschneidungen, OSM-Auswertung und Routing.
+  Es übergibt typisierte Parquet-Tabellen an dbt (`src/transit_atlas/staging.py` ist der
+  Vertrag).
+- **dbt auf DuckDB** modelliert alles Analytische: nächstes Ziel je Kategorie und
+  Zeitfenster, erreichbare Bevölkerung, gewichtete Mediane, Nachbargemeinden (DuckDB
+  spatial), Veränderung gegenüber dem vorherigen Snapshot und die Kernbefunde. Die
+  [dbt-Dokumentation mit Lineage-Graph](https://tojacob03.github.io/Letzte-Bahn/dbt/)
+  wird mit der Website veröffentlicht.
+- **GitHub Actions** führt alles kostenlos aus: CI bei jedem Push, die komplette Pipeline
+  zweimal im Monat und bei jeder Änderung am Pipeline-Code, danach Veröffentlichung von
+  Daten und Website.
 
-## Repository layout
+## Skalierung auf ganz Deutschland
+
+Das Saarland ist das Pilotgebiet, nicht die Grenze des Projekts. Alle Eingangsdaten sind
+bereits bundesweit: Der Fahrplan ist der Deutschland-Feed, Zensus-Raster und VG250 decken
+ganz Deutschland ab, OpenStreetMap-Auszüge gibt es für jedes Bundesland. Ein Gebiet wird
+allein über eine Konfigurationsdatei festgelegt:
+
+- **Gebiet = Präfix des Amtlichen Gemeindeschlüssels.** `"10"` ist das Saarland, `"09"`
+  Bayern, `"091"` der Regierungsbezirk Oberbayern, `"10046"` der Landkreis St. Wendel
+  (so läuft der Smoke-Test). Bundesland, Regierungsbezirk und Kreis gehen ohne Codeänderung.
+- **Neues Gebiet = neue YAML-Datei** in `config/` mit Gemeindeschlüssel-Präfix, den
+  OSM-Auszügen des Landes und seiner Nachbarländer (für den 20-km-Puffer), dem Land für
+  den Feiertagskalender (alle 16 Länder sind hinterlegt) und den Schulferien.
+- **Ergebnisse lassen sich zusammenfügen:** Jede Gemeinde gehört zu genau einem Gebiet,
+  Nachbargebiete dienen nur als Ziele im Puffer. Snapshots tragen das Gebiet im Namen
+  (`saarland_2026-09-26`) und liegen nebeneinander in `data/published/snapshots/`.
+- **Kostenlos bleibt es, wenn man aufteilt:** Der komplette Saarland-Lauf dauerte auf einem
+  kostenlosen GitHub-Actions-Runner 62 Minuten; ein Job darf höchstens 6 Stunden laufen.
+  Für ganz Deutschland läuft deshalb je Bundesland (große Länder je Regierungsbezirk) ein
+  eigener Job in einer Actions-Matrix.
+
+Noch nicht gebaut sind die Actions-Matrix und die Karte für das ganze Bundesgebiet: Die
+Website lädt heute GeoJSON für ein Gebiet; für Deutschland wäre das zu groß und müsste als
+Vektorkacheln (z. B. PMTiles auf GitHub Pages) ausgeliefert werden. Details in
+[METHODOLOGY.md](METHODOLOGY.md#11-scaling-to-all-of-germany).
+
+## Aufbau des Repositorys
 
 ```
-config/        run configuration (pilot region, smoke test region)
-src/transit_atlas/   Python pipeline: download, prepare, route, transform, export
-dbt/           dbt project: staging -> intermediate -> marts, macros, tests, seeds
-tests/         pytest: unit tests and dbt build on a hand-checked fixture
-web/           static website (German) and generated data in web/data
-data/published/snapshots/   metrics of every published timetable snapshot
-ops/           scripts called by the GitHub workflows
+config/        Laufkonfiguration (Pilotgebiet, Smoke-Test-Gebiet)
+src/transit_atlas/   Python-Pipeline: download, prepare, route, transform, export
+dbt/           dbt-Projekt: staging -> intermediate -> marts, Makros, Tests, Seeds
+tests/         pytest: Unit-Tests und dbt-Build auf einem von Hand nachgerechneten Datensatz
+web/           statische Website und erzeugte Daten in web/data
+data/published/snapshots/   Kennzahlen jedes veröffentlichten Fahrplanstands
+ops/           Skripte, die die GitHub-Workflows aufrufen
 ```
 
-## How to run
+## Ausführen
 
-In the cloud (no cost): every push to `main` that touches `src/`, `dbt/`, `config/` or
-`ops/` runs the full pipeline in GitHub Actions and republishes the site; pushes to other
-branches run a small smoke test (Landkreis St. Wendel). The pipeline can also be started
-by hand under *Actions → Data pipeline → Run workflow*.
+In der Cloud (kostenlos): Jeder Push auf `main`, der `src/`, `dbt/`, `config/` oder `ops/`
+ändert, startet die komplette Pipeline in GitHub Actions und veröffentlicht die Website neu;
+Pushes auf andere Branches rechnen einen kleinen Smoke-Test (Landkreis St. Wendel). Die
+Pipeline lässt sich auch von Hand starten: *Actions → Data pipeline → Run workflow*.
 
-Locally (needs Python 3.12, Java 21, [uv](https://docs.astral.sh/uv/) and `osmium-tool`,
-about 3 GB of free disk space):
+Lokal (braucht Python 3.12, Java 21, [uv](https://docs.astral.sh/uv/) und `osmium-tool`,
+etwa 3 GB freien Speicherplatz):
 
 ```bash
 uv sync
 uv run pytest
-uv run atlas run --config config/smoke.yaml     # small region, ~15 min
-uv run atlas run --config config/saarland.yaml  # pilot region
-python3 -m http.server --directory web 8000     # open http://localhost:8000
+uv run atlas run --config config/smoke.yaml     # kleines Gebiet, ca. 15 Minuten
+uv run atlas run --config config/saarland.yaml  # Pilotgebiet
+python3 -m http.server --directory web 8000     # dann http://localhost:8000 öffnen
 ```
 
-Single steps: `--steps download,prepare,route,transform,export`.
+Einzelne Schritte: `--steps download,prepare,route,transform,export`.
 
-## Data sources
+## Datenquellen
 
-| Source | License |
+| Quelle | Lizenz |
 | --- | --- |
-| Timetable: GTFS Germany, DELFI e.V. via gtfs.de | CC BY 4.0 |
-| Streets, paths, destinations: © OpenStreetMap contributors | ODbL 1.0 |
-| Population: Zensus 2022, © Statistische Ämter des Bundes und der Länder | dl-de/by-2-0 |
-| Municipal boundaries: VG250, © BKG (2026) | dl-de/by-2-0 |
-| Background map: OpenFreeMap, © OpenMapTiles, OpenStreetMap | free, attribution |
+| Fahrplan: GTFS Deutschland, DELFI e.V. über gtfs.de | CC BY 4.0 |
+| Straßen, Wege, Ziele: © OpenStreetMap-Mitwirkende | ODbL 1.0 |
+| Bevölkerung: Zensus 2022, © Statistische Ämter des Bundes und der Länder | dl-de/by-2-0 |
+| Gemeindegrenzen: VG250, © BKG (2026) | dl-de/by-2-0 |
+| Hintergrundkarte: OpenFreeMap, © OpenMapTiles, OpenStreetMap | frei, mit Namensnennung |
 
-License checks, obligations and retrieval dates: [DATA_SOURCES.md](DATA_SOURCES.md).
+Lizenzprüfung, Pflichten und Abrufdaten: [DATA_SOURCES.md](DATA_SOURCES.md).
 
-## Method and limitations
+## Methodik und Grenzen
 
-Full details in [METHODOLOGY.md](METHODOLOGY.md). The most important limitations:
+Alle Details in [METHODOLOGY.md](METHODOLOGY.md) (Englisch), eine Kurzfassung auf der
+[Methodikseite](https://tojacob03.github.io/Letzte-Bahn/methodik.html). Die wichtigsten
+Grenzen:
 
-- scheduled timetable only – no real-time data, delays or cancellations;
-- on-demand buses (Rufbus) are missing or look like regular trips;
-- opening hours are not modelled – the atlas measures the connection, not whether the
-  practice is open;
-- OpenStreetMap completeness varies, especially for doctors;
-- no population or destinations across the French and Luxembourg borders;
-- car times are free-flow without parking.
+- nur Sollfahrplan – keine Echtzeitdaten, Verspätungen oder Ausfälle;
+- Rufbusse fehlen oder sehen aus wie reguläre Fahrten;
+- Öffnungszeiten werden nicht abgebildet – der Atlas misst die Verbindung, nicht ob die
+  Praxis geöffnet hat;
+- die Vollständigkeit von OpenStreetMap schwankt, besonders bei Arztpraxen;
+- keine Bevölkerung und keine Ziele jenseits der französischen und luxemburgischen Grenze;
+- Autozeiten ohne Stau und ohne Parkplatzsuche.
 
-## Licenses
+## Lizenzen
 
-Code: [MIT](LICENSE). Published data (`web/data/`, `data/published/`): derived in part from
-OpenStreetMap and therefore under the [ODbL](DATA_LICENSE.md), with the attributions above.
+Code: [MIT](LICENSE). Veröffentlichte Daten (`web/data/`, `data/published/`): teilweise aus
+OpenStreetMap abgeleitet und daher unter der [ODbL](DATA_LICENSE.md), mit den oben genannten
+Namensnennungen.

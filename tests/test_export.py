@@ -41,7 +41,8 @@ def test_key_sentences_use_pipeline_numbers():
         "windows": [{"id": "wd_pm", "start": "20:00", "minutes": 120}],
     }
     text = " ".join(key_sentences(findings, meta))
-    assert "20 of 52" in text
-    assert "20:00–22:00" in text
-    assert "50 % fewer" in text
-    assert "2.5×" in text
+    assert "20 von 52" in text
+    assert "20:00–22:00 Uhr" in text
+    assert "100.000 Menschen" in text
+    assert "50 % weniger" in text
+    assert "2,5-mal" in text

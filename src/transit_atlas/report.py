@@ -1,7 +1,8 @@
 """Keep the key findings in README.md and CASE_STUDY.md in sync with the latest snapshot.
 
 The numbers come from ``fct_findings``; only the wording lives here, so documents never
-contain numbers that the pipeline did not compute.
+contain numbers that the pipeline did not compute. The README is written in German, the
+case study in English.
 """
 
 from __future__ import annotations
@@ -23,6 +24,23 @@ def _ratio(value: float | None) -> str:
     return "n/a" if value is None else f"{value:.1f}×"
 
 
+def _pct_de(value: float | None) -> str:
+    return "k. A." if value is None else f"{value * 100:.0f} %"
+
+
+def _count_de(value: float | None) -> str:
+    return "k. A." if value is None else f"{value:,.0f}".replace(",", ".")
+
+
+def _ratio_de(value: float | None) -> str:
+    return "k. A." if value is None else f"{value:.1f}".replace(".", ",") + "-mal"
+
+
+def _date_de(value: str) -> str:
+    year, month, day = value.split("-")
+    return f"{day}.{month}.{year}"
+
+
 def _get(findings: dict, finding: str, key: str) -> Any:
     return findings.get(finding, {}).get(key)
 
@@ -37,7 +55,7 @@ def _window_span(meta: dict, window_id: str) -> str:
 
 
 def key_sentences(findings: dict, meta: dict) -> list[str]:
-    """The three-sentence summary shown in the README."""
+    """The three-sentence summary shown in the (German) README."""
     region = meta["region"]["name"]
     below = _get(findings, "gp_evening_60", "municipalities_below_half")
     total = _get(findings, "gp_evening_60", "municipalities_total")
@@ -47,14 +65,15 @@ def key_sentences(findings: dict, meta: dict) -> list[str]:
     ratio = _get(findings, "pt_car_ratio_supermarket", "median_ratio_wd_am")
     over_three = _get(findings, "pt_car_ratio_supermarket", "share_over_3_wd_am")
     return [
-        f"In {_count(below)} of {_count(total)} municipalities in {region}, fewer than half of "
-        f"the residents can reach a family doctor's practice within 60 minutes by bus and "
-        f"train on a weekday evening ({_window_span(meta, 'wd_pm')}).",
-        f"Within 45 minutes, the median resident reaches {_count(morning)} people on a weekday "
-        f"morning but only {_count(sunday)} on a Sunday morning ({_pct(drop)} fewer).",
-        f"Getting to the nearest supermarket takes the median resident {_ratio(ratio)} as long "
-        f"by public transport as by car; for {_pct(over_three)} of residents it takes more than "
-        f"three times as long or is not possible within two hours.",
+        f"In {_count_de(below)} von {_count_de(total)} Gemeinden im Gebiet {region} erreicht an "
+        f"einem Werktagabend ({_window_span(meta, 'wd_pm')} Uhr) weniger als die Hälfte der "
+        f"Einwohner eine Hausarztpraxis innerhalb von 60 Minuten mit Bus und Bahn.",
+        f"In 45 Minuten erreicht der mittlere Einwohner (Median) an einem Werktagmorgen "
+        f"{_count_de(morning)} Menschen, an einem Sonntagvormittag nur {_count_de(sunday)} "
+        f"({_pct_de(drop)} weniger).",
+        f"Zum nächsten Supermarkt braucht der mittlere Einwohner mit Bus und Bahn "
+        f"{_ratio_de(ratio)} so lange wie mit dem Auto; für {_pct_de(over_three)} der Einwohner "
+        f"dauert es mehr als dreimal so lange oder ist in zwei Stunden gar nicht möglich.",
     ]
 
 
@@ -89,13 +108,18 @@ def detailed_results(findings: dict, meta: dict) -> list[str]:
 
 def render_block(findings: dict, meta: dict, *, detailed: bool) -> str:
     dates = meta["service_dates"]
-    header = (
-        f"_Snapshot `{meta['snapshot_id']}` · timetable days {dates['weekday']} (weekday) and "
-        f"{dates['sunday']} (Sunday) · written by the pipeline, do not edit by hand._"
-    )
     if detailed:
+        header = (
+            f"_Snapshot `{meta['snapshot_id']}` · timetable days {dates['weekday']} (weekday) "
+            f"and {dates['sunday']} (Sunday) · written by the pipeline, do not edit by hand._"
+        )
         body = "\n".join(f"- {line}" for line in detailed_results(findings, meta))
     else:
+        header = (
+            f"_Stand `{meta['snapshot_id']}` · Fahrplantage {_date_de(dates['weekday'])} "
+            f"(Werktag) und {_date_de(dates['sunday'])} (Sonntag) · von der Pipeline "
+            f"geschrieben, bitte nicht von Hand ändern._"
+        )
         body = " ".join(key_sentences(findings, meta))
     return f"{header}\n\n{body}"
 
