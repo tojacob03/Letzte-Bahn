@@ -1,31 +1,31 @@
 {
-  "snapshot_id": "saarland_2026-09-26",
-  "generated_at": "2026-09-28T23:01:32+00:00",
+  "snapshot_id": "saarland_2026-10-10",
+  "generated_at": "2026-10-16T08:48:26+00:00",
   "region": {
     "id": "saarland",
     "name": "Saarland",
     "ags_prefix": "10"
   },
   "service_dates": {
-    "weekday": "2026-09-29",
-    "sunday": "2026-10-04"
+    "weekday": "2026-10-20",
+    "sunday": "2026-10-25"
   },
   "service_date_notes": [],
   "feed": {
     "source": "gtfs.de (DELFI e.V.)",
-    "last_modified": "Sat, 26 Sep 2026 08:42:04 GMT",
-    "valid_from": "2026-09-26",
-    "valid_to": "2026-10-26",
-    "median_trips_per_day": 16328,
-    "trips_on_weekday": 19461,
-    "trips_on_sunday": 6702
+    "last_modified": "Sat, 10 Oct 2026 08:19:55 GMT",
+    "valid_from": "2026-10-10",
+    "valid_to": "2026-11-09",
+    "median_trips_per_day": 19649,
+    "trips_on_weekday": 19669,
+    "trips_on_sunday": 6728
   },
   "windows": [
     {
       "id": "wd_am",
       "label": "Werktag 7–9 Uhr",
       "day_type": "weekday",
-      "date": "2026-09-29",
+      "date": "2026-10-20",
       "start": "07:00",
       "minutes": 120
     },
@@ -33,7 +33,7 @@
       "id": "wd_pm",
       "label": "Werktag 20–22 Uhr",
       "day_type": "weekday",
-      "date": "2026-09-29",
+      "date": "2026-10-20",
       "start": "20:00",
       "minutes": 120
     },
@@ -41,7 +41,7 @@
       "id": "su_am",
       "label": "Sonntag 10–12 Uhr",
       "day_type": "sunday",
-      "date": "2026-10-04",
+      "date": "2026-10-25",
       "start": "10:00",
       "minutes": 120
     }
@@ -103,13 +103,13 @@
     "population_region": 1006204,
     "population_study_area": 1446570,
     "pois": {
-      "gp": 363,
+      "gp": 364,
       "hospital": 34,
-      "pharmacy": 352,
+      "pharmacy": 351,
       "primary_school": 351,
       "rail_station": 131,
       "secondary_school": 119,
-      "supermarket": 562
+      "supermarket": 561
     },
     "gp_strict": 130
   },
@@ -117,33 +117,36 @@
     {
       "role": "gtfs",
       "url": "https://download.gtfs.de/germany/free/latest.zip",
-      "last_modified": "Sat, 26 Sep 2026 08:42:04 GMT",
-      "retrieved_at": "2026-09-28T22:00:35+00:00"
+      "last_modified": "Sat, 10 Oct 2026 08:19:55 GMT",
+      "retrieved_at": "2026-10-16T08:08:47+00:00"
     },
     {
       "role": "osm",
       "url": "https://download.geofabrik.de/europe/germany/saarland-latest.osm.pbf",
-      "last_modified": "Mon, 28 Sep 2026 00:44:14 GMT",
-      "retrieved_at": "2026-09-28T22:00:52+00:00"
+      "last_modified": "Fri, 16 Oct 2026 03:08:27 GMT",
+      "retrieved_at": "2026-10-16T08:08:53+00:00"
     },
     {
       "role": "osm",
       "url": "https://download.geofabrik.de/europe/germany/rheinland-pfalz-latest.osm.pbf",
-      "last_modified": "Mon, 28 Sep 2026 00:49:29 GMT",
-      "retrieved_at": "2026-09-28T22:02:06+00:00"
+      "last_modified": "Fri, 16 Oct 2026 03:05:15 GMT",
+      "retrieved_at": "2026-10-16T08:09:14+00:00"
     },
     {
       "role": "census",
       "url": "https://www.destatis.de/static/DE/zensus/gitterdaten/Zensus2022_Bevoelkerungszahl.zip",
       "last_modified": "Tue, 08 Oct 2024 13:18:15 GMT",
-      "retrieved_at": "2026-09-28T22:02:08+00:00"
+      "retrieved_at": "2026-10-16T08:09:16+00:00"
     },
     {
       "role": "boundaries",
       "url": "https://daten.gdz.bkg.bund.de/produkte/vg/vg250_ebenen_0101/aktuell/vg250_01-01.utm32s.gpkg.ebenen.zip",
       "last_modified": "Tue, 21 Jul 2026 11:42:39 GMT",
-      "retrieved_at": "2026-09-28T22:02:17+00:00"
+      "retrieved_at": "2026-10-16T08:09:26+00:00"
     }
   ],
-  "change": null
+  "change": {
+    "previous_snapshot": "saarland_2026-09-26",
+    "comparable": true
+  }
 }

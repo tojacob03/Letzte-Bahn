@@ -14,9 +14,9 @@ Saarland; die Pipeline ist so gebaut, dass sie **auf ganz Deutschland skaliert**
 ## Wichtigste Befunde
 
 <!-- findings:start -->
-_Stand `saarland_2026-09-26` · Fahrplantage 29.09.2026 (Werktag) und 04.10.2026 (Sonntag) · von der Pipeline geschrieben, bitte nicht von Hand ändern._
+_Stand `saarland_2026-10-10` · Fahrplantage 20.10.2026 (Werktag) und 25.10.2026 (Sonntag) · von der Pipeline geschrieben, bitte nicht von Hand ändern._
 
-In 3 von 52 Gemeinden im Gebiet Saarland erreicht an einem Werktagabend (20:00–22:00 Uhr) weniger als die Hälfte der Einwohner eine Hausarztpraxis innerhalb von 60 Minuten mit Bus und Bahn. In 45 Minuten erreicht der mittlere Einwohner (Median) an einem Werktagmorgen 27.854 Menschen, an einem Sonntagvormittag nur 9.839 (65 % weniger). Zum nächsten Supermarkt braucht der mittlere Einwohner mit Bus und Bahn 3,7-mal so lange wie mit dem Auto; für 62 % der Einwohner dauert es mehr als dreimal so lange oder ist in zwei Stunden gar nicht möglich.
+In 3 von 52 Gemeinden im Gebiet Saarland erreicht an einem Werktagabend (20:00–22:00 Uhr) weniger als die Hälfte der Einwohner eine Hausarztpraxis innerhalb von 60 Minuten mit Bus und Bahn. In 45 Minuten erreicht der mittlere Einwohner (Median) an einem Werktagmorgen 28.117 Menschen, an einem Sonntagvormittag nur 9.733 (65 % weniger). Zum nächsten Supermarkt braucht der mittlere Einwohner mit Bus und Bahn 3,7-mal so lange wie mit dem Auto; für 62 % der Einwohner dauert es mehr als dreimal so lange oder ist in zwei Stunden gar nicht möglich.
 <!-- findings:end -->
 
 Die Zahlen oben schreibt die Pipeline bei jedem Lauf neu; Diagramme dazu stehen auf der
